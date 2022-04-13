@@ -17,17 +17,15 @@ function Project() {
 
 	let { projectName } = project;
 
-	// NEED TO DISPACTH A NEW PROJECT TO THE DATABSE FIRST SO WE CAN USE IT
-
 	// project index for setting our dispatch (so we know which project we are in the project context)
 	const projectIndex = projects.findIndex(el => {
 		return el.projectName === projectName;
 	});
 
 	// Get all of the pages
-	const pages = Object.entries(project.pages);
+	const pages = [...project.pages];
 	//get all of the fields
-	console.log(project.pages[`page_${pageTab}`].fields);
+	const fields = [...project.pages[pageTab - 1]];
 
 	//---------------------------------------------------------------------------------------------------//
 	const handleNameChange = async e => {
@@ -50,7 +48,26 @@ function Project() {
 
 	//---------------------------------------------------------------------------------------------------//
 	const handleAddField = () => {
-		//
+		fields.push(['', [0]]);
+
+		dispatch({
+			type: 'ADD_FIELD',
+			payload: { projectIndex, page: pageTab - 1, fields },
+		});
+
+		handleDatabaseUpdate();
+	};
+
+	//---------------------------------------------------------------------------------------------------//
+	const handleAddPage = () => {
+		fields.push(['', [0]]);
+
+		dispatch({
+			type: 'ADD_FIELD',
+			payload: { projectIndex, page: pageTab - 1, fields },
+		});
+
+		handleDatabaseUpdate();
 	};
 
 	//---------------------------------------------------------------------------------------------------//
@@ -87,14 +104,24 @@ function Project() {
 				{pages.map((page, i) => {
 					return (
 						<button
-							className={`tab tab-lg p-2 tab-lifted border-none ${i + 1 === pageTab ? `tab-active` : ''}`}
+							className={`tab tab-lg p-2 tab-lifted hover:bg-base-300 border-none ${
+								i + 1 === pageTab ? `tab-active` : ''
+							}`}
 							onClick={() => setPageTab(i + 1)}
 							key={i}
 						>
-							{page[0][0].toUpperCase() + page[0].slice(1).trim().replace('_', ' ')}
+							{`PAGE ${i + 1}`}
 						</button>
 					);
 				})}
+
+				{/* New Page Btn */}
+				<button
+					className={`tab tab-lg p-2 hover:bg-success hover:text-base-300 tab-lifted border-none`}
+					onClick={handleAddPage}
+				>
+					<FaPlus />
+				</button>
 			</div>
 
 			{/* Fields */}
@@ -102,18 +129,17 @@ function Project() {
 				<div className="h-full flex relative flex-row gap-10">
 					{/* Make a fields div for each page */}
 					{pages.map((page, i) => {
-						const fields = Object.entries(page[1].fields);
 						return (
 							<div key={i} className={`h-full basis-4/6 ${i + 1 === pageTab ? '' : 'hidden'}`}>
 								{/* Fields list */}
-								{fields.map((field, j) => {
+								{page.map((field, j) => {
 									return (
 										<ProjectFields
 											key={j}
-											itemNum={field[0]}
-											field={field}
-											page={page[0]}
 											project={project}
+											page={i}
+											field={j}
+											itemNum={field[0]}
 											projectIndex={projectIndex}
 											projectName={projectName}
 											handleDatabaseUpdate={handleDatabaseUpdate}
@@ -122,7 +148,10 @@ function Project() {
 								})}
 
 								{/* Add new field button */}
-								<button className="btn btn-block btn-sm border-none flex justify-center items-center bg-base-200 hover:bg-success hover:text-base-300 rounded-lg shadow-xl mt-3">
+								<button
+									className="btn btn-block btn-sm border-none flex justify-center items-center bg-base-200 hover:bg-success hover:text-base-300 rounded-lg shadow-xl mt-3"
+									onClick={handleAddField}
+								>
 									<FaPlus />
 								</button>
 							</div>

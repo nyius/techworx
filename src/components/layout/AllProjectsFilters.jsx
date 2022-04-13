@@ -21,7 +21,7 @@ function AllProjectsFilters() {
 	};
 
 	return (
-		<>
+		<div className="mt-3 grid grid-cols-1 lg:grid-cols-6 bg-base-200 rounded-lg mb-3">
 			<div
 				className="flex hover:bg-base-300 p-2 rounded-lg cursor-pointer items-center"
 				onClick={() => handleSortClick(`projectName`)}
@@ -32,7 +32,7 @@ function AllProjectsFilters() {
 				{sortBy === 'ProjectNameDown' ? <FaArrowDown className="text-xl pl-2" /> : ''}
 			</div>
 			<div
-				className="flex hover:bg-base-300 p-2 rounded-lg cursor-pointer items-center"
+				className="flex hover:bg-base-300 p-2 rounded-lg cursor-pointer items-center hidden lg:flex"
 				onClick={() => handleSortClick(`createdDate`)}
 			>
 				<p className="mr-2">|</p>
@@ -41,7 +41,7 @@ function AllProjectsFilters() {
 				{sortBy === 'DateCreatedDown' ? <FaArrowDown className="text-xl pl-2" /> : ''}
 			</div>
 			<div
-				className="flex hover:bg-base-300 p-2 rounded-lg cursor-pointer items-center"
+				className="flex hover:bg-base-300 p-2 rounded-lg cursor-pointer items-center hidden lg:flex"
 				onClick={() => handleSortClick(`createdBy`)}
 			>
 				<p className="mr-2">|</p>
@@ -50,7 +50,7 @@ function AllProjectsFilters() {
 				{sortBy === 'CreatedByDown' ? <FaArrowDown className="text-xl pl-2" /> : ''}
 			</div>
 			<div
-				className="flex hover:bg-base-300 p-2 rounded-lg cursor-pointer items-center"
+				className="flex hover:bg-base-300 p-2 rounded-lg cursor-pointer items-center hidden lg:flex"
 				onClick={() => handleSortClick(`editedDate`)}
 			>
 				<p className="mr-2">|</p>
@@ -59,7 +59,7 @@ function AllProjectsFilters() {
 				{sortBy === 'EditedDateDown' ? <FaArrowDown className="text-xl pl-2" /> : ''}
 			</div>
 			<div
-				className="flex hover:bg-base-300 p-2 rounded-lg cursor-pointer items-center"
+				className="flex hover:bg-base-300 p-2 rounded-lg cursor-pointer items-center hidden lg:flex"
 				onClick={() => handleSortClick(`editedBy`)}
 			>
 				<p className="mr-2">|</p>
@@ -67,7 +67,7 @@ function AllProjectsFilters() {
 				{sortBy === 'EditedByUp' ? <FaArrowUp className="text-xl pl-2" /> : ''}
 				{sortBy === 'EditedByDown' ? <FaArrowDown className="text-xl pl-2" /> : ''}
 			</div>
-		</>
+		</div>
 	);
 }
 

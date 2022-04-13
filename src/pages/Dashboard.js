@@ -62,9 +62,8 @@ function Dashboard() {
 				<p className="font-bold text-accent-content text-xl">All Projects</p>
 
 				{/* -------------------- Filters --------------------*/}
-				<div className="mt-3 grid grid-cols-6 bg-base-200 rounded-lg mb-3">
-					<AllProjectsFilters />
-				</div>
+
+				<AllProjectsFilters />
 
 				{/*-------------------- Generate All Projects List --------------------*/}
 				{sortedProjects.map((project, i) => {

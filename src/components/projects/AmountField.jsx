@@ -5,6 +5,7 @@ import ProjectsContext from '../../context/projects/ProjectContext';
 function AmountField({
 	value = '',
 	page,
+	field,
 	itemNum,
 	project,
 	amountIndex,
@@ -17,7 +18,7 @@ function AmountField({
 	const { dispatch } = useContext(ProjectsContext);
 
 	// Making a copy of our values array
-	const numValues = [...project.pages[page].fields[itemNum].values];
+	const numValues = [...project.pages[page][field][1]];
 
 	//---------------------------------------------------------------------------------------------------//
 	// whenever we update an amount, modify our context
@@ -29,7 +30,7 @@ function AmountField({
 		// context needs to know our project name that we're working on, the page we're on, the item number, and the values
 		await dispatch({
 			type: 'SET_VALUE',
-			payload: { projectName, page, itemNum, numValues, projectIndex },
+			payload: { projectName, page, field, numValues, projectIndex },
 		});
 
 		handleDatabaseUpdate();
@@ -41,7 +42,7 @@ function AmountField({
 
 		await dispatch({
 			type: 'REMOVE_VALUE',
-			payload: { projectName, page, itemNum, numValues, projectIndex },
+			payload: { projectName, page, field, numValues, projectIndex },
 		});
 		handleDatabaseUpdate();
 	};
@@ -57,7 +58,7 @@ function AmountField({
 
 			dispatch({
 				type: 'ADD_VALUE',
-				payload: { projectName, page, itemNum, numValues, projectIndex },
+				payload: { projectName, page, field, numValues, projectIndex },
 			});
 		}
 	};

@@ -19,7 +19,7 @@ function Navbar() {
 	return (
 		<div>
 			<div className="navbar flex-col md:flex-row shadow-lg bg-base-100 px-10">
-				<div className="flex-1 m-2">
+				<div className="flex-1 m-0 md:m-2">
 					<Link to="/dashboard" className="btn btn-ghost normal-case btn-lg text-xl">
 						TechworX
 					</Link>

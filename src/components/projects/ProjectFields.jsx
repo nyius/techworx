@@ -14,10 +14,11 @@ function ProjectFields({
 	handleDatabaseUpdate,
 }) {
 	const { dispatch } = useContext(ProjectsContext);
-	// Shows the + button uder the fields to add a new one
 
 	// Calculate our totals
-	const numValues = [...project.pages[page].fields[itemNum].values];
+	const numValues = [...project.pages[page][field][1]];
+	let fieldName = project.pages[page][field][0];
+
 	let total = numValues.reduce((acc, cur) => acc + cur);
 
 	//---------------------------------------------------------------------------------------------------//
@@ -26,27 +27,27 @@ function ProjectFields({
 
 		dispatch({
 			type: 'ADD_VALUE',
-			payload: { projectName, page, itemNum, numValues, projectIndex },
+			payload: { projectName, page, field, numValues, projectIndex },
 		});
 	};
 
 	//---------------------------------------------------------------------------------------------------//
 	const handleEditFieldName = e => {
-		const fieldName = (field[1].name = e.target.value);
+		const newFieldName = (fieldName = e.target.value);
 
 		dispatch({
 			type: 'SET_FIELD_NAME',
-			payload: { projectName, page, itemNum, fieldName, projectIndex },
+			payload: { projectName, page, field, newFieldName, projectIndex },
 		});
 	};
 
-	const values = field[1].values;
+	// const values = field[1].values;
 
 	//---------------------------------------------------------------------------------------------------//
 	const handleDeleteField = async () => {
 		await dispatch({
 			type: 'REMOVE_FIELD',
-			payload: { projectName, page, itemNum, projectIndex },
+			payload: { projectName, page, field, projectIndex },
 		});
 		handleDatabaseUpdate();
 	};
@@ -62,7 +63,7 @@ function ProjectFields({
 						type="text"
 						className="input w-full w-full bg-base-100 "
 						placeholder="eg. New Trench/Bore"
-						defaultValue={field[1].name}
+						defaultValue={fieldName}
 						onChange={handleEditFieldName}
 						onBlur={handleDatabaseUpdate}
 					/>
@@ -72,14 +73,15 @@ function ProjectFields({
 			{/* ------------------------------------------------------------------------ */}
 			{/* Field Amount */}
 			<div className="col-span-3">
-				{values.map((value, i) => {
+				{numValues.map((value, i) => {
 					return (
 						<AmountField
 							key={i}
-							value={value}
-							fieldName={field[0]}
-							itemNum={itemNum}
 							page={page}
+							field={field}
+							value={value}
+							fieldName={fieldName}
+							itemNum={itemNum}
 							amountIndex={i}
 							project={project}
 							projectIndex={projectIndex}

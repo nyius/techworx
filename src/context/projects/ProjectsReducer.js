@@ -7,11 +7,16 @@ const ProjectsReducer = (state, action) => {
 			};
 		case 'ADD_VALUE':
 			const addValueState = { ...state };
-			addValueState.projects[action.payload.projectIndex].pages[action.payload.page].fields[
-				action.payload.itemNum
-			].values = action.payload.numValues;
+			addValueState.projects[action.payload.projectIndex].pages[action.payload.page][action.payload.field][1] =
+				action.payload.numValues;
 
 			return addValueState;
+		case 'ADD_FIELD':
+			console.log(action.payload);
+			const addFieldState = { ...state };
+			addFieldState.projects[action.payload.projectIndex].pages[action.payload.page] = action.payload.fields;
+
+			return addFieldState;
 		case 'ADD_PROJECT':
 			const addProjectState = { ...state };
 			addProjectState.projects = [...addProjectState.projects, action.payload];
@@ -19,16 +24,13 @@ const ProjectsReducer = (state, action) => {
 			return addProjectState;
 		case 'REMOVE_VALUE':
 			const removeValueState = { ...state };
-			removeValueState.projects[action.payload.projectIndex].pages[action.payload.page].fields[
-				action.payload.itemNum
-			].values = action.payload.numValues;
+			removeValueState.projects[action.payload.projectIndex].pages[action.payload.page][action.payload.field][1] =
+				action.payload.numValues;
 
 			return removeValueState;
 		case 'REMOVE_FIELD':
 			const newProjects = { ...state };
-			delete newProjects.projects[action.payload.projectIndex].pages[action.payload.page].fields[
-				action.payload.itemNum
-			];
+			delete newProjects.projects[action.payload.projectIndex].pages[action.payload.page][action.payload.field];
 
 			return newProjects;
 		case 'SET_NAME':
@@ -40,17 +42,16 @@ const ProjectsReducer = (state, action) => {
 		case 'SET_FIELD_NAME':
 			const setFieldNameState = { ...state };
 
-			setFieldNameState.projects[action.payload.projectIndex].pages[action.payload.page].fields[
-				action.payload.itemNum
-			].name = action.payload.fieldName;
+			setFieldNameState.projects[action.payload.projectIndex].pages[action.payload.page][
+				action.payload.field
+			][0] = action.payload.newFieldName;
 
 			return setFieldNameState;
 		case 'SET_VALUE':
 			const setValueState = { ...state };
 
-			setValueState.projects[action.payload.projectIndex].pages[action.payload.page].fields[
-				action.payload.itemNum
-			].values = action.payload.numValues;
+			setValueState.projects[action.payload.projectIndex].pages[action.payload.page][action.payload.field][1] =
+				action.payload.numValues;
 
 			return setValueState;
 		default:

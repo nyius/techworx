@@ -9,7 +9,7 @@ function AllProjectsList({ project }) {
 
 	return (
 		<div
-			className="grid grid-cols-6 rounded-lg hover:bg-base-200 "
+			className="grid grid-cols-1 lg:grid-cols-6 rounded-lg hover:bg-base-200 "
 			data-bs-toggle="tooltip"
 			data-bs-placement="top"
 			title={projectName}
@@ -19,16 +19,16 @@ function AllProjectsList({ project }) {
 				<FaFile />
 				<p className="truncate ...">{projectName}</p>
 			</div>
-			<div className="flex cursor-pointer p-1 pr-10 rounded-lg gap-x-2 items-center">
+			<div className="flex cursor-pointer p-1 pr-10 rounded-lg gap-x-2 items-center hidden lg:block">
 				<p>{moment(createdDate).format('M/D/Y, h:mm a')}</p>
 			</div>
-			<div className="flex cursor-pointer p-1 pr-10 rounded-lg gap-x-2 items-center">
+			<div className="flex cursor-pointer p-1 pr-10 rounded-lg gap-x-2 items-center hidden lg:block">
 				<p>{createdBy}</p>
 			</div>
-			<div className="flex cursor-pointer p-1 pr-10 rounded-lg gap-x-2 items-center">
+			<div className="flex cursor-pointer p-1 pr-10 rounded-lg gap-x-2 items-center hidden lg:block">
 				<p>{moment(editedDate).format('M/D/Y, h:mm a')}</p>
 			</div>
-			<div className="flex cursor-pointer p-1 pr-10 rounded-lg gap-x-2 items-center">
+			<div className="flex cursor-pointer p-1 pr-10 rounded-lg gap-x-2 items-center hidden lg:block">
 				<p>{editedBy}</p>
 			</div>
 		</div>

@@ -1,25 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import Navbar from './components/layout/Navbar';
+import Footer from './components/layout/Footer';
+import './firebase/firebase';
+import { ProjectsProvider } from './context/projects/ProjectContext';
+import { FiltersProvider } from './context/filters/FiltersContext';
+import { AlertProvider } from './context/alert/AlertContext';
+import { AuthProvider } from './context/auth/AuthContext';
+import AppRoutes from './routes/AppRoutes';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	return (
+		<AuthProvider>
+			<AlertProvider>
+				<FiltersProvider>
+					<ProjectsProvider>
+						<div className="flex flex-col h-screen">
+							<Navbar />
+							<AppRoutes />
+							<Footer />
+						</div>
+					</ProjectsProvider>
+				</FiltersProvider>
+			</AlertProvider>
+		</AuthProvider>
+	);
 }
 
 export default App;

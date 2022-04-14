@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import ProjectsContext from '../context/projects/ProjectContext';
 import AlertContext from '../context/alert/AlertContext';
 import { FaArrowLeft, FaPlus } from 'react-icons/fa';
@@ -10,15 +10,19 @@ import _ from 'lodash';
 function Project() {
 	const { projects, dispatch } = useContext(ProjectsContext);
 	const { setAlert } = useContext(AlertContext);
-
 	const [pageTab, setPageTab] = useState(1);
 	let params = useParams();
+	const { pathname } = useLocation();
 	let navigate = useNavigate();
 
 	// Get our project from the passed in state
 	const project = projects.find(el => {
 		return el.id === params.id;
 	});
+
+	useEffect(() => {
+		project.curOpen = true;
+	}, []);
 
 	let { projectName } = project;
 
@@ -31,15 +35,6 @@ function Project() {
 	const pages = _.cloneDeep(project.pages);
 	const curPageFields = _.cloneDeep(project.pages[pageTab - 1]);
 
-	// handle updating the databse function that gets passed down as props into projact&amount field ------------------------------------------------------------//
-	const handleDatabaseUpdate = async () => {
-		try {
-			UpdateProject(project.id, project, dispatch);
-		} catch (error) {
-			console.log(error);
-		}
-	};
-
 	// Handle what to do when the user changes the project name ---------------------------------------------------------------------------------------------------//
 	const handleNameChange = async e => {
 		projectName = e.target.value.trim();
@@ -49,7 +44,7 @@ function Project() {
 			payload: { projectName, projectIndex },
 		});
 
-		handleDatabaseUpdate();
+		UpdateProject(project, dispatch, projectIndex);
 	};
 
 	// Handle what to do when the user adds a new field ---------------------------------------------------------------------------------------------------//
@@ -59,7 +54,7 @@ function Project() {
 			payload: { projectIndex, pages },
 		});
 
-		handleDatabaseUpdate();
+		UpdateProject(project, dispatch, projectIndex);
 	};
 
 	// Handle what to do when the user adds a new page ---------------------------------------------------------------------------------------------------//
@@ -72,8 +67,8 @@ function Project() {
 			type: 'ADD_PAGE',
 			payload: { projectIndex, pages },
 		});
-		updateLastEdited();
-		handleDatabaseUpdate();
+
+		UpdateProject(project, dispatch, projectIndex);
 	};
 
 	// handle deleting a certain page ---------------------------------------------------------------------------------------------------//
@@ -87,7 +82,8 @@ function Project() {
 			type: 'REMOVE_PAGE',
 			payload: { projectIndex, page: pageTab - 1 },
 		});
-		handleDatabaseUpdate();
+
+		UpdateProject(project, dispatch, projectIndex);
 	};
 
 	// What to do when deleting the whole permit -----------------------------------------------------------------------------------------------//
@@ -95,20 +91,17 @@ function Project() {
 		removeProjectAndNavigate(navigate, dispatch, projectIndex, project.id);
 	};
 
-	const updateLastEdited = () => {
-		// console.log(project.editedDate);
-	};
-
 	//---------------------------------------------------------------------------------------------------//
 	return (
 		<div className="h-fit mx-auto w-11/12 bg-base-100 rounded-xl p-5 shadow-xl">
 			{/* -------------------------------Top Bar -------------------------------*/}
 			<div className="flex flex-row justify-between items-center">
-				<Link to="/dashboard">
-					<button className="btn btn-sm btn-accent ">
-						<FaArrowLeft className="mr-2" /> Back to projects
-					</button>
-				</Link>
+				<button
+					className="btn btn-sm btn-accent "
+					onClick={() => navigate('/dashboard', { state: pathname.replace('/project/', '') })}
+				>
+					<FaArrowLeft className="mr-2" /> Back to projects
+				</button>
 				<p className="text-xl font-bold">{projectName}</p>
 
 				{/* -------------------------------Delete Permit btn -------------------------------*/}
@@ -127,7 +120,7 @@ function Project() {
 						placeholder="Enter a project name"
 						defaultValue={projectName}
 						onChange={handleNameChange}
-						onBlur={handleDatabaseUpdate}
+						onBlur={() => UpdateProject(project, dispatch, projectIndex)}
 					/>
 				</label>
 			</div>
@@ -183,7 +176,6 @@ function Project() {
 												itemNum={field[0]}
 												projectIndex={projectIndex}
 												projectName={projectName}
-												handleDatabaseUpdate={handleDatabaseUpdate}
 												handleAddField={handleAddField}
 											/>
 										);

@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useContext, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { FaPlus } from 'react-icons/fa';
 import ProjectsContext from '../context/projects/ProjectContext';
 import UserProjectHero from '../components/projects/UserProjectHero';
@@ -7,15 +7,36 @@ import AllProjectsList from '../components/projects/AllProjectsList';
 import FiltersContext from '../context/filters/FiltersContext';
 import ProjectsSelector from '../selectors/ProjectsSelector';
 import AllProjectsFilters from '../components/layout/AllProjectsFilters';
-import { createNewProjectAndNavigate } from '../context/projects/ProjectsActions';
+import { createNewProjectAndNavigate, UpdateProject } from '../context/projects/ProjectsActions';
 
 function Dashboard() {
 	const { projects, loading, loadProjects, dispatch: dispatchProject } = useContext(ProjectsContext);
 	const { sortBy, search, dispatch: dispatchFilter } = useContext(FiltersContext);
 	let navigate = useNavigate();
 	let sortedProjects = [];
+	let location = useLocation();
+	const previousProjectPage = location.state;
+	let previousProject, projectIndex;
 
+	// If we have projects, sort them by our chosen sorting method---------------------------------------------------------------------------------------------------//
 	if (projects) sortedProjects = ProjectsSelector(projects, sortBy, search);
+
+	useEffect(() => {
+		// If we came from a project, gather its info so we can set its curOpen to false---------------------------------------------------------------------------------------------//
+		if (previousProjectPage) {
+			previousProject = projects.find(project => {
+				return project.id === previousProjectPage;
+			});
+
+			// project index for setting our dispatch (so we know which project we are in the project context)
+			projectIndex = projects.findIndex(project => {
+				return project.id === previousProjectPage;
+			});
+
+			previousProject.curOpen = false;
+			UpdateProject(previousProject, dispatchProject, projectIndex);
+		}
+	}, []);
 
 	//---------------------------------------------------------------------------------------------------//
 

@@ -67,6 +67,10 @@ function AllProjectsFilters() {
 				{sortBy === 'EditedByUp' ? <FaArrowUp className="text-xl pl-2" /> : ''}
 				{sortBy === 'EditedByDown' ? <FaArrowDown className="text-xl pl-2" /> : ''}
 			</div>
+			<div className="flex hover:bg-base-300 p-2 rounded-lg cursor-pointer items-center hidden lg:flex">
+				<p className="mr-2">|</p>
+				<p className="text-accent-content text-xl">Currently Open</p>
+			</div>
 		</div>
 	);
 }

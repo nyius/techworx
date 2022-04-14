@@ -1,6 +1,7 @@
 import { database } from '../../firebase/firebase';
 import { getDatabase, ref, set, update, remove, onValue, get, child, push } from 'firebase/database';
 import { NewProjectBase } from './ProjectNewBase';
+import moment from 'moment';
 
 // This gets all projects ---------------------------------------------------------------------------------------------------//
 export const GetProjects = async () => {
@@ -48,9 +49,22 @@ export const GetProject = async key => {
 		});
 };
 
+// Updates our "editedDate and editedBy" properties on a permit ---------------------------------------------------------------------------------------------------//
+export const updateLastEdited = (projectIndex, dispatch) => {
+	const editedDate = moment();
+
+	dispatch({
+		type: 'SET_EDIT',
+		payload: { projectIndex, editedDate: editedDate.valueOf() },
+	});
+};
+
 // This updates a project ---------------------------------------------------------------------------------------------------//
-export const UpdateProject = async (id, project) => {
-	const databaseProjectsRef = ref(database, `projects/${id}`);
+export const UpdateProject = async (project, dispatch, projectIndex) => {
+	const databaseProjectsRef = ref(database, `projects/${project.id}`);
+
+	// set the editedDate/By values
+	updateLastEdited(projectIndex, dispatch);
 
 	return update(databaseProjectsRef, project)
 		.then(e => {})
@@ -101,7 +115,7 @@ export const createNewProjectAndNavigate = async (navigate, dispatchProject) => 
 	}
 };
 
-//---------------------------------------------------------------------------------------------------//
+// Dispatches our removed permit after we've edited out DB---------------------------------------------------------------------------------------------------//
 export const dispatchRemoveProject = (projectIndex, dispatch) =>
 	new Promise((resolve, reject) => {
 		dispatch({
@@ -111,7 +125,7 @@ export const dispatchRemoveProject = (projectIndex, dispatch) =>
 		resolve();
 	});
 
-//---------------------------------------------------------------------------------------------------//
+// Removes a project and navigates to the home page. combines other functions---------------------------------------------------------------------------------------------------//
 export const removeProjectAndNavigate = async (navigate, dispatch, projectIndex, id) => {
 	try {
 		const databaseProjectRef = ref(database, `projects/${id}`);
@@ -125,3 +139,13 @@ export const removeProjectAndNavigate = async (navigate, dispatch, projectIndex,
 		return error;
 	}
 };
+
+// Dispatches our removed permit after we've edited out DB---------------------------------------------------------------------------------------------------//
+export const dispatchCurOpen = (projectIndex, dispatch) =>
+	new Promise((resolve, reject) => {
+		dispatch({
+			type: 'SET_CUR_OPEN',
+			payload: { projectIndex },
+		});
+		resolve();
+	});

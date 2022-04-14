@@ -3,18 +3,9 @@ import { ImCross } from 'react-icons/im';
 import ProjectsContext from '../../context/projects/ProjectContext';
 import { useFocus } from '../../hooks/useFocus';
 import { useMountEffect } from '../../hooks/inputMount';
+import { UpdateProject } from '../../context/projects/ProjectsActions';
 
-function AmountField({
-	value = '',
-	page,
-	field,
-	itemNum,
-	project,
-	amountIndex,
-	projectIndex,
-	projectName,
-	handleDatabaseUpdate,
-}) {
+function AmountField({ value = '', page, field, project, amountIndex, projectIndex, projectName }) {
 	const [focus, setFocus] = useState(true);
 
 	const { dispatch } = useContext(ProjectsContext);
@@ -39,7 +30,7 @@ function AmountField({
 			payload: { projectName, page, field, numValues, projectIndex },
 		});
 
-		handleDatabaseUpdate();
+		UpdateProject(project, dispatch, projectIndex);
 	};
 
 	// Handle deleting an amount------------------------------------------------------------------------------------//
@@ -51,7 +42,7 @@ function AmountField({
 			type: 'REMOVE_VALUE',
 			payload: { projectName, page, field, numValues, projectIndex },
 		});
-		handleDatabaseUpdate();
+		UpdateProject(project, dispatch, projectIndex);
 	};
 
 	// Handle pressing enter to add a new amount -------------------------------------------------------------------//
@@ -88,7 +79,7 @@ function AmountField({
 				defaultValue={value}
 				onChange={e => handleAmountChange(e)}
 				onKeyDown={handleEnterKey}
-				onBlur={handleDatabaseUpdate}
+				onBlur={() => UpdateProject(project, dispatch, projectIndex)}
 				ref={inputRef}
 			/>
 			<span

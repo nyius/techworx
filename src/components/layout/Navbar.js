@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { NavLink, Link, useNavigate } from 'react-router-dom';
+import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom';
 import { startLogout } from '../../context/auth/AuthActions';
 import Alert from './Alert';
 import AuthContext from '../../context/auth/AuthContext';
@@ -10,6 +10,7 @@ function Navbar() {
 	const { logout } = useContext(AuthContext);
 	const { dispatch: dispatchProject } = useContext(ProjectsContext);
 	let navigate = useNavigate();
+	const { pathname } = useLocation();
 
 	const handleLogout = () => {
 		navigate('/');
@@ -21,9 +22,12 @@ function Navbar() {
 		<div>
 			<div className="navbar h-1 flex-col md:flex-row shadow-lg bg-base-100 px-10">
 				<div className="flex-1 m-0 md:m-2">
-					<Link to="/dashboard" className="btn btn-ghost normal-case btn-lg text-xl">
+					<button
+						className="btn btn-ghost normal-case btn-lg text-xl"
+						onClick={() => navigate('/dashboard', { state: pathname.replace('/project/', '') })}
+					>
 						TechworX
-					</Link>
+					</button>
 				</div>
 				<div className="flex flex-col md:flex-row items-center justify-center">
 					<Link to="/dashboard" className="btn btn-lg btn-ghost">

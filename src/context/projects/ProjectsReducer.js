@@ -61,6 +61,17 @@ const ProjectsReducer = (state, action) => {
 			setNameState.projects[action.payload.projectIndex].projectName = action.payload.projectName;
 
 			return setNameState;
+		case 'SET_EDIT':
+			const setEditState = { ...state };
+
+			setEditState.projects[action.payload.projectIndex].editedDate = action.payload.editedDate;
+
+			return setEditState;
+		case 'SET_CUR_OPEN':
+			const setCurOpen = { ...state };
+			setCurOpen.projects[action.payload.projectIndex].curOpen = false;
+
+			return setCurOpen;
 		case 'SET_FIELD_NAME':
 			const setFieldNameState = { ...state };
 

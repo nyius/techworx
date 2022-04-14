@@ -6,17 +6,9 @@ import ProjectsContext from '../../context/projects/ProjectContext';
 import _ from 'lodash';
 import { useFocus } from '../../hooks/useFocus';
 import { useMountEffect } from '../../hooks/inputMount';
+import { UpdateProject } from '../../context/projects/ProjectsActions';
 
-function ProjectFields({
-	itemNum,
-	field,
-	page,
-	project,
-	projectIndex,
-	handleAddField,
-	projectName = 'Untitled Project',
-	handleDatabaseUpdate,
-}) {
+function ProjectFields({ field, page, project, projectIndex, handleAddField, projectName = 'Untitled Project' }) {
 	const { dispatch } = useContext(ProjectsContext);
 
 	// For hiding buttons when not hovering --------------------------------------------------------------------------------//
@@ -51,7 +43,7 @@ function ProjectFields({
 			type: 'SET_FIELD_NAME',
 			payload: { projectName, page, field, newFieldName, projectIndex },
 		});
-		handleDatabaseUpdate();
+		UpdateProject(project, dispatch, projectIndex);
 	};
 
 	//---------------------------------------------------------------------------------------------------//
@@ -60,7 +52,7 @@ function ProjectFields({
 			type: 'REMOVE_FIELD',
 			payload: { projectName, page, field, projectIndex },
 		});
-		handleDatabaseUpdate();
+		UpdateProject(project, dispatch, projectIndex);
 	};
 
 	//---------------------------------------------------------------------------------------------------//
@@ -89,7 +81,7 @@ function ProjectFields({
 						placeholder="eg. New Trench/Bore"
 						defaultValue={fieldName}
 						onChange={handleEditFieldName}
-						onBlur={handleDatabaseUpdate}
+						onBlur={() => UpdateProject(project, dispatch, projectIndex)}
 						onKeyDown={handleEnterKey}
 						ref={inputRef}
 					/>
@@ -107,12 +99,10 @@ function ProjectFields({
 							field={field}
 							value={value}
 							fieldName={fieldName}
-							itemNum={itemNum}
 							amountIndex={i}
 							project={project}
 							projectIndex={projectIndex}
 							projectName={projectName}
-							handleDatabaseUpdate={handleDatabaseUpdate}
 						/>
 					);
 				})}

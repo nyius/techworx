@@ -3,7 +3,6 @@ import CreateAccount from '../pages/CreateAccount';
 import NotFound from '../pages/NotFound';
 import Login from '../pages/Login';
 import Dashboard from '../pages/Dashboard';
-import NewProject from '../pages/NewProject';
 import React from 'react';
 import PrivateRoutes from './PrivateRoutes';
 import PublicRoutes from './PublicRoutes';
@@ -37,16 +36,6 @@ function AppRoutes() {
 				element={
 					<PrivateRoutes>
 						<Dashboard />
-					</PrivateRoutes>
-				}
-			/>
-
-			<Route
-				exact
-				path="/new_project"
-				element={
-					<PrivateRoutes>
-						<NewProject />
 					</PrivateRoutes>
 				}
 			/>

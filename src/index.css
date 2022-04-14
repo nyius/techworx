@@ -10,14 +10,43 @@
 	background-color: hsla(var(--b3) / var(--tw-bg-opacity, 1));
 }
 
-.h-1000 {
-	height: 36rem;
-}
-
 .input:focus {
 	outline-offset: 0px;
 }
 
 .input {
 	color: white;
+}
+
+/* handle smooth opening and closing of elements  */
+.smoothExpansionParent:hover .smoothExpansionContent {
+	max-height: 300px;
+}
+
+.smoothExpansionContent {
+	-webkit-transition: max-height 0.3s;
+	-moz-transition: max-height 0.3;
+	-ms-transition: max-height 0.3s;
+	-o-transition: max-height 0.3s;
+	transition: max-height 0.3s;
+	overflow: hidden;
+	max-height: 0;
+}
+
+.smoothExpansionParent {
+	-webkit-transition: background 0.1s linear;
+	-moz-transition: background 0.1s linear;
+	-ms-transition: background 0.1s linear;
+	-o-transition: background 0.1s linear;
+	transition: background 0.1s linear;
+}
+
+/* Hide the up and down arrows for input fields */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+input[type='number'] {
+	-moz-appearance: textfield;
 }

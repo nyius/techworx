@@ -28,7 +28,7 @@ googleProvider.setCustomParameters({
 
 // Email auth ---------------------------------------------------------------------------------------------------//
 
-// const databaseProjRef = ref(database, 'projects');
+const databaseProjRef = ref(database, 'projects');
 // push(databaseProjRef, {
 // 	projectName: 'UntitledProject',
 // 	createdBy: 'New Project',

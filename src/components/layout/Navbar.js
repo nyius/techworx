@@ -12,13 +12,14 @@ function Navbar() {
 	let navigate = useNavigate();
 
 	const handleLogout = () => {
+		navigate('/');
 		logout();
 		startLogout();
 	};
 
 	return (
 		<div>
-			<div className="navbar flex-col md:flex-row shadow-lg bg-base-100 px-10">
+			<div className="navbar h-1 flex-col md:flex-row shadow-lg bg-base-100 px-10">
 				<div className="flex-1 m-0 md:m-2">
 					<Link to="/dashboard" className="btn btn-ghost normal-case btn-lg text-xl">
 						TechworX
@@ -36,12 +37,28 @@ function Navbar() {
 						New Project
 					</button>
 
-					<Link to="/" className="btn btn-outline btn-error btn-sm ml-5 " onClick={handleLogout}>
+					<label htmlFor="logout-modal" className="btn btn-outline btn-error btn-sm ml-5 ">
 						Logout
-					</Link>
+					</label>
 				</div>
 			</div>
 			<Alert />
+			<input type="checkbox" id="logout-modal" className="modal-toggle" />
+			<div className="modal">
+				<div className="modal-box relative flex flex-col">
+					<label htmlFor="logout-modal" className="btn btn-sm btn-circle absolute right-2 top-2">
+						X
+					</label>
+					<p className="text-lg text-accent-content mt-5">Are you sure you want to logout?</p>
+					<label htmlFor="logout-modal" className="btn btn-sm btn-accent my-5">
+						CANCEL
+					</label>
+
+					<label htmlFor="logout-modal" className="btn btn-sm btn-outline btn-error " onClick={handleLogout}>
+						LOGOUT
+					</label>
+				</div>
+			</div>
 		</div>
 	);
 }

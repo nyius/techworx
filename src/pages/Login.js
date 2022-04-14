@@ -18,7 +18,7 @@ function Login() {
 		const uid = await startGoogleLogin();
 
 		if (!uid) {
-			setAlert('Error logging in', 'Error');
+			setAlert('Error logging in', 'error');
 		} else {
 			login(uid);
 			navigate('/dashboard');

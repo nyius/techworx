@@ -12,13 +12,22 @@ const ProjectsReducer = (state, action) => {
 
 			return addValueState;
 		case 'ADD_FIELD':
-			console.log(action.payload);
 			const addFieldState = { ...state };
-			addFieldState.projects[action.payload.projectIndex].pages[action.payload.page] = action.payload.fields;
+
+			// give each page the new field
+			addFieldState.projects[action.payload.projectIndex].pages.forEach(page => {
+				page.push(['', [0]]);
+			});
 
 			return addFieldState;
+		case 'ADD_PAGE':
+			const addPageState = { ...state };
+			addPageState.projects[action.payload.projectIndex].pages = action.payload.pages;
+
+			return addPageState;
 		case 'ADD_PROJECT':
 			const addProjectState = { ...state };
+			console.log(state);
 			addProjectState.projects = [...addProjectState.projects, action.payload];
 
 			return addProjectState;
@@ -30,9 +39,22 @@ const ProjectsReducer = (state, action) => {
 			return removeValueState;
 		case 'REMOVE_FIELD':
 			const newProjects = { ...state };
-			delete newProjects.projects[action.payload.projectIndex].pages[action.payload.page][action.payload.field];
+			newProjects.projects[action.payload.projectIndex].pages.forEach(page => {
+				page.splice(action.payload.field, 1);
+			});
 
 			return newProjects;
+		case 'REMOVE_PAGE':
+			const removePageState = { ...state };
+			removePageState.projects[action.payload.projectIndex].pages.splice(action.payload.page, 1);
+
+			return removePageState;
+		case 'REMOVE_PERMIT':
+			const removePermitState = { ...state };
+
+			removePermitState.projects.splice(action.payload.projectIndex, 1);
+
+			return removePermitState;
 		case 'SET_NAME':
 			const setNameState = { ...state };
 
@@ -42,9 +64,10 @@ const ProjectsReducer = (state, action) => {
 		case 'SET_FIELD_NAME':
 			const setFieldNameState = { ...state };
 
-			setFieldNameState.projects[action.payload.projectIndex].pages[action.payload.page][
-				action.payload.field
-			][0] = action.payload.newFieldName;
+			// update the field name on every page
+			setFieldNameState.projects[action.payload.projectIndex].pages.forEach(page => {
+				page[action.payload.field][0] = action.payload.newFieldName;
+			});
 
 			return setFieldNameState;
 		case 'SET_VALUE':

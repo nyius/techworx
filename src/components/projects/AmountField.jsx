@@ -1,6 +1,8 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { ImCross } from 'react-icons/im';
 import ProjectsContext from '../../context/projects/ProjectContext';
+import { useFocus } from '../../hooks/useFocus';
+import { useMountEffect } from '../../hooks/inputMount';
 
 function AmountField({
 	value = '',
@@ -13,9 +15,13 @@ function AmountField({
 	projectName,
 	handleDatabaseUpdate,
 }) {
-	const [focus, setFocus] = useState(false);
+	const [focus, setFocus] = useState(true);
 
 	const { dispatch } = useContext(ProjectsContext);
+
+	// this is to handle setting input when adding a new field ------------------------------------------------------------//
+	const [inputRef, setInputRef] = useFocus();
+	useMountEffect(setInputRef);
 
 	// Making a copy of our values array
 	const numValues = [...project.pages[page][field][1]];
@@ -36,9 +42,10 @@ function AmountField({
 		handleDatabaseUpdate();
 	};
 
-	//---------------------------------------------------------------------------------------------------//
-	const handleDeleteField = async () => {
+	// Handle deleting an amount------------------------------------------------------------------------------------//
+	const handleDeleteAmount = async () => {
 		numValues.splice(amountIndex, 1);
+		numValues.filter(Boolean);
 
 		await dispatch({
 			type: 'REMOVE_VALUE',
@@ -47,7 +54,7 @@ function AmountField({
 		handleDatabaseUpdate();
 	};
 
-	//---------------------------------------------------------------------------------------------------//
+	// Handle pressing enter to add a new amount -------------------------------------------------------------------//
 	const handleEnterKey = e => {
 		if (e.key === 'Enter') {
 			if (numValues[amountIndex] === '') {
@@ -60,26 +67,33 @@ function AmountField({
 				type: 'ADD_VALUE',
 				payload: { projectName, page, field, numValues, projectIndex },
 			});
+
+			setInputRef();
 		}
 	};
 
 	//---------------------------------------------------------------------------------------------------//
 
 	return (
-		<label htmlFor="" className="input-group mb-1 ">
+		<label
+			htmlFor=""
+			className="input-group mb-1 "
+			onMouseEnter={() => setFocus(false)}
+			onMouseLeave={() => setFocus(true)}
+		>
 			<input
 				type="number"
-				className="input w-full bg-base-100"
+				className="input w-full bg-base-100 input-sm"
 				placeholder="eg. 145"
 				defaultValue={value}
 				onChange={e => handleAmountChange(e)}
 				onKeyDown={handleEnterKey}
 				onBlur={handleDatabaseUpdate}
-				autoFocus
+				ref={inputRef}
 			/>
 			<span
-				className={`w-6 p-1 bg-base-200 hover:bg-error hover:text-base-300 cursor-pointer`}
-				onClick={handleDeleteField}
+				className={`w-6 p-1 bg-base-200 hover:bg-error hover:text-base-300 cursor-pointer ${focus && 'hidden'}`}
+				onClick={handleDeleteAmount}
 			>
 				<ImCross />
 			</span>

@@ -20,7 +20,9 @@ export const GetProjects = async () => {
 
 				return projects;
 			} else {
-				console.log(`No projects Available`);
+				const projects = [];
+
+				return projects;
 			}
 		})
 		.catch(error => {
@@ -47,10 +49,10 @@ export const GetProject = async key => {
 };
 
 // This updates a project ---------------------------------------------------------------------------------------------------//
-export const UpdateProject = async (id, updates) => {
+export const UpdateProject = async (id, project) => {
 	const databaseProjectsRef = ref(database, `projects/${id}`);
 
-	return update(databaseProjectsRef, updates)
+	return update(databaseProjectsRef, project)
 		.then(e => {})
 		.catch(error => {
 			console.log(error);
@@ -95,5 +97,31 @@ export const createNewProjectAndNavigate = async (navigate, dispatchProject) => 
 		});
 	} catch (error) {
 		console.log(error);
+		return error;
+	}
+};
+
+//---------------------------------------------------------------------------------------------------//
+export const dispatchRemoveProject = (projectIndex, dispatch) =>
+	new Promise((resolve, reject) => {
+		dispatch({
+			type: 'REMOVE_PERMIT',
+			payload: projectIndex,
+		});
+		resolve();
+	});
+
+//---------------------------------------------------------------------------------------------------//
+export const removeProjectAndNavigate = async (navigate, dispatch, projectIndex, id) => {
+	try {
+		const databaseProjectRef = ref(database, `projects/${id}`);
+
+		await remove(databaseProjectRef);
+		dispatchRemoveProject(projectIndex, dispatch).then(() => {
+			navigate('/dashboard');
+		});
+	} catch (error) {
+		console.log(error);
+		return error;
 	}
 };

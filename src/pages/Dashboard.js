@@ -13,13 +13,14 @@ function Dashboard() {
 	const { projects, loading, loadProjects, dispatch: dispatchProject } = useContext(ProjectsContext);
 	const { sortBy, search, dispatch: dispatchFilter } = useContext(FiltersContext);
 	let navigate = useNavigate();
+	let sortedProjects = [];
 
-	const sortedProjects = ProjectsSelector(projects, sortBy, search);
+	if (projects) sortedProjects = ProjectsSelector(projects, sortBy, search);
 
 	//---------------------------------------------------------------------------------------------------//
 
 	return (
-		<div className="mx-auto w-11/12 bg-base-100 h-5/6 rounded-xl p-5 shadow-xl">
+		<div className="mx-auto w-11/12 bg-base-100 h-fit rounded-xl p-5 shadow-xl pb-10">
 			<div className="mb-6">
 				<label htmlFor="" className="input-group">
 					<span className="bg-base-300">Search</span>
@@ -34,11 +35,11 @@ function Dashboard() {
 
 			{/*-------------------- Recent Projects --------------------*/}
 			<p className="font-bold text-accent-content text-xl">Your Recent Projects</p>
-			<div className="lg:h-36 my-4 flex flex-col gap-x-5 gap-y-4 flex-wrap lg:flex-row md:flex-col sm:flex-col">
+			<div className=" my-4 flex flex-col gap-x-5 gap-y-4 flex-wrap lg:flex-row md:flex-col sm:flex-col">
 				{/* New Project Btn */}
 				<button
 					onClick={() => createNewProjectAndNavigate(navigate, dispatchProject)}
-					className="stats bg-base-200 w-14 shadow-md rounded-lg flex-none hover:bg-base-300 cursor-pointer flex flex-col justify-center items-center"
+					className="stats bg-base-200 w-full lg:w-14 shadow-md rounded-lg flex-none hover:bg-base-300 cursor-pointer flex flex-col justify-center items-center"
 					data-bs-toggle="tooltip"
 					data-bs-placement="top"
 					title="Add a new project"

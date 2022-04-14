@@ -28,7 +28,7 @@ export const NewProjectBase = {
 	editedBy: 'New Project',
 	editedDate: '01/01/2022 00:00 AM',
 	curOpen: false,
-	pages: [[['', [0]]]],
+	pages: [[['', [0], false]]],
 };
 
 //structure like this:

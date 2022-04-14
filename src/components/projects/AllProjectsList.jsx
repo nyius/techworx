@@ -12,9 +12,9 @@ function AllProjectsList({ project }) {
 
 	return (
 		<div
-			className={`grid grid-cols-1 lg:grid-cols-6 rounded-lg hover:bg-base-200 ${
+			className={`grid grid-cols-1 text-accent-content lg:grid-cols-6 rounded-lg hover:bg-base-200 ${
 				curOpen
-					? 'bg-error text-error-content lg:bg-base-100 lg:text-accent-content hover:bg-error-content hover:text-accent-content'
+					? 'bg-error text-base-300 lg:bg-base-100 lg:text-accent-content hover:bg-error-content hover:text-accent-content'
 					: ''
 			}`}
 			data-bs-toggle="tooltip"

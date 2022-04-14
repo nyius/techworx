@@ -30,9 +30,12 @@ function Navbar() {
 					</button>
 				</div>
 				<div className="flex flex-col md:flex-row items-center justify-center">
-					<Link to="/dashboard" className="btn btn-lg btn-ghost">
+					<button
+						className="btn btn-lg btn-ghost"
+						onClick={() => navigate('/dashboard', { state: pathname.replace('/project/', '') })}
+					>
 						Dashboard
-					</Link>
+					</button>
 
 					<button
 						className="btn btn-lg btn-ghost"
@@ -48,8 +51,8 @@ function Navbar() {
 			</div>
 			<Alert />
 			<input type="checkbox" id="logout-modal" className="modal-toggle" />
-			<div className="modal">
-				<div className="modal-box relative flex flex-col">
+			<label htmlFor="logout-modal" className="modal">
+				<label className="modal-box relative flex flex-col">
 					<label htmlFor="logout-modal" className="btn btn-sm btn-circle absolute right-2 top-2">
 						X
 					</label>
@@ -61,8 +64,8 @@ function Navbar() {
 					<label htmlFor="logout-modal" className="btn btn-sm btn-outline btn-error " onClick={handleLogout}>
 						LOGOUT
 					</label>
-				</div>
-			</div>
+				</label>
+			</label>
 		</div>
 	);
 }

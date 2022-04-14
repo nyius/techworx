@@ -74,7 +74,7 @@ function AmountField({ value = '', page, field, project, amountIndex, projectInd
 		>
 			<input
 				type="number"
-				className="input w-full bg-base-100 input-sm"
+				className="input w-full bg-base-100 input-sm rounded-r-lg"
 				placeholder="eg. 145"
 				defaultValue={value}
 				onChange={e => handleAmountChange(e)}

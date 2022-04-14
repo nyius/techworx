@@ -1,6 +1,5 @@
-import React, { useContext } from 'react';
-import AuthContext from '../context/auth/AuthContext';
-import { Navigate, useNavigate } from 'react-router-dom';
+import React from 'react';
+import { Navigate } from 'react-router-dom';
 
 function PublicRoutes({ children }) {
 	const loggedIn = localStorage.getItem('loggedIn');

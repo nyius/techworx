@@ -8,7 +8,7 @@ function PrivateRoutes({ children }) {
 
 	const isAuthenticated = uid.uid.length > 0;
 
-	return isAuthenticated ? <>{children}</> : <Navigate to="/" />;
+	return loggedIn ? <>{children}</> : <Navigate to="/" />;
 }
 
 export default PrivateRoutes;

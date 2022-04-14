@@ -21,6 +21,7 @@ function ProjectFields({ field, page, project, projectIndex, handleAddField, pro
 	// get various values to use------------------------------------------------------------------------------------------//
 	const numValues = _.cloneDeep(project.pages[page][field][1]);
 	let fieldName = project.pages[page][field][0];
+	let fieldMeterChecked = _.cloneDeep(project.pages[page][field][2]);
 
 	// Calculate our totals ----------------------------------------------------------------------------------------------//
 	let total = numValues.reduce((acc, cur) => acc + cur);
@@ -46,7 +47,7 @@ function ProjectFields({ field, page, project, projectIndex, handleAddField, pro
 		UpdateProject(project, dispatch, projectIndex);
 	};
 
-	//---------------------------------------------------------------------------------------------------//
+	// handles what happens when a user delets a field---------------------------------------------------------------------------------------------------//
 	const handleDeleteField = async () => {
 		await dispatch({
 			type: 'REMOVE_FIELD',
@@ -55,7 +56,7 @@ function ProjectFields({ field, page, project, projectIndex, handleAddField, pro
 		UpdateProject(project, dispatch, projectIndex);
 	};
 
-	//---------------------------------------------------------------------------------------------------//
+	// handles what happened when the user is selected on a field name and presses enter--------------------------------------------------------------------------------------//
 	const handleEnterKey = e => {
 		if (e.key === 'Enter') {
 			if (fieldName === '') {
@@ -66,9 +67,19 @@ function ProjectFields({ field, page, project, projectIndex, handleAddField, pro
 		}
 	};
 
+	// Handle what happens when the meter checkbox is clicked. Gets flipped in the reducer-------------------------------------------------------------------------------------//
+	const handleMeterBoxChange = async () => {
+		await dispatch({
+			type: 'SET_METER_CHECKED',
+			payload: { projectName, page, field, projectIndex },
+		});
+
+		UpdateProject(project, dispatch, projectIndex);
+	};
+
 	//---------------------------------------------------------------------------------------------------//
 	return (
-		<div className="mt-4 grid grid-cols-12 gap-8 basis-4/6">
+		<div className="mt-4 grid grid-cols-12 gap-6 basis-4/6">
 			{/* Field Name */}
 			<div className="col-span-7">
 				<label htmlFor="" className="input-group ">
@@ -118,7 +129,7 @@ function ProjectFields({ field, page, project, projectIndex, handleAddField, pro
 
 			{/* ------------------------------------------------------------------------ */}
 			{/* Page Total */}
-			<div className="col-span-3 mr-4">
+			<div className="col-span-2 mr-">
 				<label
 					htmlFor=""
 					className="input-group cursor-pointer h-8"
@@ -127,7 +138,7 @@ function ProjectFields({ field, page, project, projectIndex, handleAddField, pro
 				>
 					<span className="bg-neutral-focus">=</span>
 					<div
-						className=" flex justify-center items-center h-8 w-full max-w-sm bg-base-100 h-8"
+						className=" flex justify-center items-center rounded-r-lg h-8 w-full max-w-sm bg-base-100 h-8"
 						onMouseEnter={() => setHidden(false)}
 						onMouseLeave={() => setHidden(true)}
 					>
@@ -135,18 +146,46 @@ function ProjectFields({ field, page, project, projectIndex, handleAddField, pro
 					</div>
 
 					{/* Delete Field Button */}
-					<span
-						className={`w-6 p-1 bg-base-200 hover:bg-error hover:text-base-300 cursor-pointer ${
-							hidden && 'hidden'
-						}`}
-						onClick={handleDeleteField}
-						onMouseEnter={() => setHidden(false)}
-						onMouseLeave={() => setHidden(true)}
+
+					<label
+						className="w-6 p-1 bg-base-200 flex justify-center items-center hover:bg-error hover:text-base-300 cursor-pointer"
+						htmlFor="delete-field-modal"
 					>
-						<ImCross />
-					</span>
+						<ImCross className="w-3 h-3" />
+					</label>
 				</label>
 			</div>
+			<div className="cols-span-1 flex flex-row justify-center">
+				<input
+					type="checkbox"
+					className="checkbox mr-2 "
+					checked={fieldMeterChecked}
+					onChange={handleMeterBoxChange}
+				/>
+				<p className="text-neutral-content">m</p>
+			</div>
+
+			{/* ----------------------------------- Delete Field Modal----------------------------------- */}
+			<input type="checkbox" id="delete-field-modal" className="modal-toggle" />
+			<label htmlFor="delete-field-modal" className="modal">
+				<label className="modal-box relative flex flex-col">
+					<label htmlFor="delete-field-modal" className="btn btn-sm btn-circle absolute right-2 top-2">
+						X
+					</label>
+					<p className="text-lg text-accent-content mt-5">Are you sure you want to delete this field?</p>
+					<label htmlFor="delete-field-modal" className="btn btn-sm btn-accent my-5">
+						CANCEL
+					</label>
+
+					<label
+						htmlFor="delete-field-modal"
+						className="btn btn-sm btn-outline btn-error "
+						onClick={handleDeleteField}
+					>
+						DELETE
+					</label>
+				</label>
+			</label>
 		</div>
 	);
 }

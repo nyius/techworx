@@ -4,6 +4,7 @@ const ProjectsReducer = (state, action) => {
 			return {
 				...state,
 				projects: action.payload,
+				loading: false,
 			};
 		case 'ADD_VALUE':
 			const addValueState = { ...state };
@@ -16,7 +17,7 @@ const ProjectsReducer = (state, action) => {
 
 			// give each page the new field
 			addFieldState.projects[action.payload.projectIndex].pages.forEach(page => {
-				page.push(['', [0]]);
+				page.push(['', [0], false]);
 			});
 
 			return addFieldState;
@@ -27,7 +28,7 @@ const ProjectsReducer = (state, action) => {
 			return addPageState;
 		case 'ADD_PROJECT':
 			const addProjectState = { ...state };
-			console.log(state);
+
 			addProjectState.projects = [...addProjectState.projects, action.payload];
 
 			return addProjectState;
@@ -88,6 +89,16 @@ const ProjectsReducer = (state, action) => {
 				action.payload.numValues;
 
 			return setValueState;
+		case 'SET_METER_CHECKED':
+			const setMeterCheckedState = { ...state };
+
+			setMeterCheckedState.projects[action.payload.projectIndex].pages.forEach(page => {
+				page[action.payload.field][2] === false
+					? (page[action.payload.field][2] = true)
+					: (page[action.payload.field][2] = false);
+			});
+
+			return setMeterCheckedState;
 		default:
 			return state;
 	}

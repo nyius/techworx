@@ -3,8 +3,23 @@ import { getDatabase, ref, set, update, remove, onValue, get, child, push } from
 import { NewProjectBase } from './ProjectNewBase';
 import moment from 'moment';
 
+// Set projects local storage---------------------------------------------------------------------------------------------------//
+export const setProjectsLocalStorage = projects => {
+	localStorage.setItem('projects', JSON.stringify(projects));
+};
+
+// Dispatches our removed permit after we've edited out DB---------------------------------------------------------------------------------------------------//
+export const dispatchGetProjects = (projects, dispatch) =>
+	new Promise((resolve, reject) => {
+		dispatch({
+			type: 'GET_PROJECTS',
+			payload: projects,
+		});
+		resolve();
+	});
+
 // This gets all projects ---------------------------------------------------------------------------------------------------//
-export const GetProjects = async () => {
+export const GetProjects = async dispatch => {
 	const databaseRef = ref(database);
 
 	return get(child(databaseRef, 'projects'))
@@ -18,6 +33,8 @@ export const GetProjects = async () => {
 						...project.val(),
 					});
 				});
+				setProjectsLocalStorage(projects);
+				dispatchGetProjects(projects, dispatch);
 
 				return projects;
 			} else {

@@ -6,31 +6,23 @@ import { GetProjects } from './ProjectsActions';
 const ProjectsContext = createContext();
 
 export const ProjectsProvider = ({ children }) => {
+	const loggedIn = localStorage.getItem('loggedIn');
+
 	// Initial State ---------------------------------------------------------------------------------------------------//
 	const initialState = {
 		projects: [],
 		loading: true,
 	};
 
-	const [state, dispatch] = useReducer(ProjectsReducer, initialState);
-
-	// Load all starting projects ---------------------------------------------------------------------------------------------//
-	const loadProjects = async () => {
-		const projects = await GetProjects();
-
-		dispatch({
-			type: 'GET_PROJECTS',
-			payload: projects,
-		});
-	};
-
 	useEffect(() => {
-		loadProjects();
+		if (loggedIn) GetProjects(dispatch);
 	}, []);
+
+	const [state, dispatch] = useReducer(ProjectsReducer, initialState);
 
 	//---------------------------------------------------------------------------------------------------//
 
-	return <ProjectsContext.Provider value={{ ...state, dispatch, loadProjects }}>{children}</ProjectsContext.Provider>;
+	return <ProjectsContext.Provider value={{ ...state, loggedIn, dispatch }}>{children}</ProjectsContext.Provider>;
 };
 
 export default ProjectsContext;

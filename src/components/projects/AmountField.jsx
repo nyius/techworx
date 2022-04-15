@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { ImCross } from 'react-icons/im';
 import ProjectsContext from '../../context/projects/ProjectContext';
 import { useFocus } from '../../hooks/useFocus';
@@ -17,6 +17,11 @@ function AmountField({ value = '', page, field, project, amountIndex, projectInd
 	// Making a copy of our values array
 	const numValues = [...project.pages[page][field][1]];
 
+	// This is to change the value a field shows whenever a field is deleted (otherwise they wouldn't update)
+	useEffect(() => {
+		inputRef.current.value = numValues[amountIndex];
+	}, [numValues]);
+
 	//---------------------------------------------------------------------------------------------------//
 	// whenever we update an amount, modify our context
 	const handleAmountChange = async e => {
@@ -24,7 +29,6 @@ function AmountField({ value = '', page, field, project, amountIndex, projectInd
 		numValues[amountIndex] = Number(e.target.value);
 
 		// dispatch our information to our context
-		// context needs to know our project name that we're working on, the page we're on, the item number, and the values
 		await dispatch({
 			type: 'SET_VALUE',
 			payload: { projectName, page, field, numValues, projectIndex },
@@ -34,7 +38,7 @@ function AmountField({ value = '', page, field, project, amountIndex, projectInd
 	};
 
 	// Handle deleting an amount------------------------------------------------------------------------------------//
-	const handleDeleteAmount = async () => {
+	const handleDeleteAmount = async e => {
 		numValues.splice(amountIndex, 1);
 		numValues.filter(Boolean);
 
@@ -84,7 +88,7 @@ function AmountField({ value = '', page, field, project, amountIndex, projectInd
 			/>
 			<span
 				className={`w-6 p-1 bg-base-200 hover:bg-error hover:text-base-300 cursor-pointer ${focus && 'hidden'}`}
-				onClick={handleDeleteAmount}
+				onClick={e => handleDeleteAmount(e)}
 			>
 				<ImCross />
 			</span>

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { FaPlus, FaGripVertical } from 'react-icons/fa';
 import { ImCross } from 'react-icons/im';
 import AmountField from './AmountField';
@@ -21,7 +21,18 @@ function ProjectFields({ field, page, project, projectIndex, handleAddField, pro
 	let fieldMeterChecked = _.cloneDeep(project.pages[page][field][2]);
 
 	// Calculate our totals ----------------------------------------------------------------------------------------------//
-	let total = numValues.reduce((acc, cur) => acc + cur);
+	let total = numValues.reduce((acc, cur) => {
+		if (cur === '') {
+			return acc;
+		} else {
+			return acc + cur;
+		}
+	});
+
+	// This is to change the Field name whenever a field is deleted (otherwise they wouldn't update)
+	useEffect(() => {
+		inputRef.current.value = fieldName;
+	}, [fieldName]);
 
 	// handle someone adding a new ammount -------------------------------------------------------------------------------//
 	const handeNewAmount = () => {

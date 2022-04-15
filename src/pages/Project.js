@@ -10,8 +10,9 @@ import Spinner from '../components/assets/Spinner';
 
 // TODO:
 // Fix field values that dont update when a row/amount is deleted
-// new users have to set a name
-//       name is used for who created/updated a project
+// Fix 2 things with same uid when making a new project on the dashboard??
+// fix cant edit any fields until first setting a project name
+// name is used for who created/updated a project
 
 function Project() {
 	const { projects, loading, dispatch } = useContext(ProjectsContext);
@@ -71,7 +72,7 @@ function Project() {
 		pageCopy.forEach(pageField => {
 			pageField[1] = [0];
 		});
-		console.log(pageCopy);
+
 		pages.push(pageCopy);
 
 		await dispatch({
@@ -88,7 +89,14 @@ function Project() {
 			setAlert("Can't delete last page", 'error');
 			return;
 		}
-		setPageTab(pageTab - 1);
+
+		// Check if they're on the first page
+		if (pageTab === 1) {
+			setPageTab(1);
+		} else {
+			setPageTab(pageTab - 1);
+		}
+
 		await dispatch({
 			type: 'REMOVE_PAGE',
 			payload: { projectIndex, page: pageTab - 1 },

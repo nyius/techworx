@@ -1,31 +1,19 @@
 import moment from 'moment';
 
+let user, firstName, lastName;
 const createdAtDate = moment();
-
-// export const NewProjectBase = {
-// 	projectName: 'UntitledProject',
-// 	createdBy: 'New Project',
-// 	createdDate: createdAtDate.valueOf(),
-// 	editedBy: 'New Project',
-// 	editedDate: '01/01/2022 00:00 AM',
-// 	curOpen: false,
-// 	pages: {
-// 		page_1: {
-// 			fields: {
-// 				item_1: {
-// 					name: '',
-// 					values: [0],
-// 				},
-// 			},
-// 		},
-// 	},
-// };
+const localData = JSON.parse(localStorage.getItem('loggedIn'));
+if (localData) {
+	user = localData[1];
+	firstName = user.firstName;
+	lastName = user.lastName;
+}
 
 export const NewProjectBase = {
 	projectName: 'UntitledProject',
-	createdBy: 'New Project',
+	createdBy: `${firstName} ${lastName}`,
 	createdDate: createdAtDate.valueOf(),
-	editedBy: 'New Project',
+	editedBy: `${firstName} ${lastName}`,
 	editedDate: createdAtDate.valueOf(),
 	curOpen: false,
 	pages: [[['', [0], false]]],

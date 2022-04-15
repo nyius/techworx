@@ -1,14 +1,14 @@
 import authReducer from './AuthReducer';
 import React, { useReducer, createContext, useEffect } from 'react';
-import { startLogin } from '../auth/AuthActions';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-	const loggedIn = localStorage.getItem('loggedIn');
+	const loggedIn = JSON.parse(localStorage.getItem('loggedIn'));
 
 	const initalState = {
 		uid: '',
+		user: {},
 	};
 
 	const [state, dispatch] = useReducer(authReducer, initalState);
@@ -24,15 +24,6 @@ export const AuthProvider = ({ children }) => {
 			});
 		}
 	}, []);
-
-	// Handle user logging in
-	const login = uid => {
-		localStorage.setItem('loggedIn', uid);
-		dispatch({
-			type: 'LOGIN',
-			payload: uid,
-		});
-	};
 
 	// Handle user logging out
 	const logout = uid => {

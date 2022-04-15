@@ -72,6 +72,7 @@ function ProjectFields({ field, page, project, projectIndex, handleAddField, pro
 			}
 			handleAddField();
 			setInputRef();
+			UpdateProject(project, dispatch, projectIndex);
 		}
 	};
 

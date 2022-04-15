@@ -9,10 +9,7 @@ import _ from 'lodash';
 import Spinner from '../components/assets/Spinner';
 
 // TODO:
-// Fix field values that dont update when a row/amount is deleted
 // Fix 2 things with same uid when making a new project on the dashboard??
-// fix cant edit any fields until first setting a project name
-// name is used for who created/updated a project
 
 function Project() {
 	const { projects, loading, dispatch } = useContext(ProjectsContext);
@@ -51,7 +48,6 @@ function Project() {
 			type: 'SET_NAME',
 			payload: { projectName, projectIndex },
 		});
-
 		UpdateProject(project, dispatch, projectIndex);
 	};
 
@@ -101,7 +97,6 @@ function Project() {
 			type: 'REMOVE_PAGE',
 			payload: { projectIndex, page: pageTab - 1 },
 		});
-
 		UpdateProject(project, dispatch, projectIndex);
 	};
 

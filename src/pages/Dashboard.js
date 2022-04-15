@@ -101,6 +101,9 @@ function Dashboard() {
 
 					{/*-------------------- Generate All Projects List --------------------*/}
 					{sortedProjects.map((project, i) => {
+						{
+							/* console.log(project.projectName); */
+						}
 						return <AllProjectsList key={project.id} project={project} />;
 					})}
 				</div>

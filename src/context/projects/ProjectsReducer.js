@@ -52,7 +52,7 @@ const ProjectsReducer = (state, action) => {
 			return removePageState;
 		case 'REMOVE_PERMIT':
 			const removePermitState = { ...state };
-
+			console.log(removePermitState);
 			removePermitState.projects.splice(action.payload.projectIndex, 1);
 
 			return removePermitState;
@@ -66,6 +66,9 @@ const ProjectsReducer = (state, action) => {
 			const setEditState = { ...state };
 
 			setEditState.projects[action.payload.projectIndex].editedDate = action.payload.editedDate;
+			setEditState.projects[
+				action.payload.projectIndex
+			].editedBy = `${action.payload.firstName} ${action.payload.lastName}`;
 
 			return setEditState;
 		case 'SET_CUR_OPEN':

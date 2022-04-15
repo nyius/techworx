@@ -2,6 +2,8 @@ import { database } from '../../firebase/firebase';
 import { ref, update, remove, get, child, push, onValue } from 'firebase/database';
 import { NewProjectBase } from './ProjectNewBase';
 import moment from 'moment';
+import AuthContext from '../auth/AuthContext';
+import React, { useContext, useEffect, useState } from 'react';
 
 // Listener for project updates on the DB ------------------------------------------------------------------------------------------------//
 export const databaseProjectListener = dispatchProject => {
@@ -87,21 +89,23 @@ export const GetProject = async key => {
 };
 
 // Updates our "editedDate and editedBy" properties on a permit ---------------------------------------------------------------------------------------------------//
-export const updateLastEdited = (projectIndex, dispatch) => {
+export const updateLastEdited = (projectIndex, dispatch, user) => {
 	const editedDate = moment();
+	const { firstName, lastName } = user;
 
 	dispatch({
 		type: 'SET_EDIT',
-		payload: { projectIndex, editedDate: editedDate.valueOf() },
+		payload: { projectIndex, editedDate: editedDate.valueOf(), firstName, lastName },
 	});
 };
 
 // This updates a project ---------------------------------------------------------------------------------------------------//
 export const UpdateProject = async (project, dispatch, projectIndex) => {
 	const databaseProjectsRef = ref(database, `projects/${project.id}`);
+	const user = JSON.parse(localStorage.getItem('loggedIn'))[1];
 
 	// set the editedDate/By values
-	updateLastEdited(projectIndex, dispatch);
+	updateLastEdited(projectIndex, dispatch, user);
 
 	return update(databaseProjectsRef, project)
 		.then(e => {})
@@ -167,10 +171,9 @@ export const removeProjectAndNavigate = async (navigate, dispatch, projectIndex,
 	try {
 		const databaseProjectRef = ref(database, `projects/${id}`);
 
+		navigate('/dashboard');
+		dispatchRemoveProject(projectIndex, dispatch);
 		await remove(databaseProjectRef);
-		dispatchRemoveProject(projectIndex, dispatch).then(() => {
-			navigate('/dashboard');
-		});
 	} catch (error) {
 		console.log(error);
 		return error;

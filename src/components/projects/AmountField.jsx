@@ -64,6 +64,7 @@ function AmountField({ value = '', page, field, project, amountIndex, projectInd
 			});
 
 			setInputRef();
+			UpdateProject(project, dispatch, projectIndex);
 		}
 	};
 

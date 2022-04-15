@@ -3,7 +3,7 @@ import { FaArrowUp, FaArrowDown } from 'react-icons/fa';
 import FiltersContext from '../../context/filters/FiltersContext';
 
 function AllProjectsFilters() {
-	const { sortBy, search, dispatch } = useContext(FiltersContext);
+	const { sortBy, dispatch } = useContext(FiltersContext);
 
 	const handleSortClick = props => {
 		switch (props) {
@@ -17,6 +17,8 @@ function AllProjectsFilters() {
 				return dispatch({ type: 'SET_SORTBY', payload: sortBy === "EditedByUp" ? 'EditedByDown' : "EditedByUp" }) //prettier-ignore
 			case 'editedDate':
 				return dispatch({ type: 'SET_SORTBY', payload: sortBy === "EditedDateUp" ? 'EditedDateDown' : "EditedDateUp" }) //prettier-ignore
+			default:
+				return props;
 		}
 	};
 

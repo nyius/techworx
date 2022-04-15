@@ -1,6 +1,5 @@
-import { createContext, useReducer, useEffect, onValue } from 'react';
+import { createContext, useReducer, useEffect } from 'react';
 import ProjectsReducer from './ProjectsReducer';
-import { database } from '../../firebase/firebase';
 import { GetProjects } from './ProjectsActions';
 
 const ProjectsContext = createContext();

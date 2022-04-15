@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { FaPlus, FaCircle, FaGripVertical } from 'react-icons/fa';
+import React, { useState, useContext } from 'react';
+import { FaPlus, FaGripVertical } from 'react-icons/fa';
 import { ImCross } from 'react-icons/im';
 import AmountField from './AmountField';
 import ProjectsContext from '../../context/projects/ProjectContext';
@@ -10,9 +10,6 @@ import { UpdateProject } from '../../context/projects/ProjectsActions';
 
 function ProjectFields({ field, page, project, projectIndex, handleAddField, projectName = 'Untitled Project' }) {
 	const { dispatch } = useContext(ProjectsContext);
-
-	// For hiding buttons when not hovering --------------------------------------------------------------------------------//
-	const [hidden, setHidden] = useState(true);
 
 	// this is to handle setting input when adding a new field ------------------------------------------------------------//
 	const [inputRef, setInputRef] = useFocus();
@@ -118,30 +115,24 @@ function ProjectFields({ field, page, project, projectIndex, handleAddField, pro
 					);
 				})}
 
-				{/* Add new field button */}
+				{/* Add new amount button */}
 				<button
-					className={`btn btn-block btn-sm border-none flex justify-center items-center bg-base-200 rounded-lg shadow-md mt-1 hover:bg-success hover:text-base-300`}
+					className={`btn btn-block btn-sm border-none flex justify-center items-center bg-base-200 rounded-lg shadow-md mt-1 hover:bg-success text-accent hover:text-base-200`}
 					onClick={handeNewAmount}
+					data-bs-toggle="tooltip"
+					data-bs-placement="top"
+					title="Add a new amount"
 				>
-					<FaPlus />
+					<FaPlus className="" />
 				</button>
 			</div>
 
 			{/* ------------------------------------------------------------------------ */}
 			{/* Page Total */}
 			<div className="col-span-2 mr-">
-				<label
-					htmlFor=""
-					className="input-group cursor-pointer h-8"
-					onMouseEnter={() => setHidden(false)}
-					onMouseLeave={() => setHidden(true)}
-				>
-					<span className="bg-neutral-focus">=</span>
-					<div
-						className=" flex justify-center items-center rounded-r-lg h-8 w-full max-w-sm bg-base-100 h-8"
-						onMouseEnter={() => setHidden(false)}
-						onMouseLeave={() => setHidden(true)}
-					>
+				<label htmlFor="" className="input-group cursor-pointer h-8">
+					<span className="bg-neutral-focus text-base-100">=</span>
+					<div className=" flex justify-center items-center rounded-r-lg h-8 w-full max-w-sm bg-base-100 h-8">
 						{total}
 					</div>
 
@@ -150,6 +141,9 @@ function ProjectFields({ field, page, project, projectIndex, handleAddField, pro
 					<label
 						className="w-6 p-1 bg-base-200 flex justify-center items-center hover:bg-error hover:text-base-300 cursor-pointer"
 						htmlFor="delete-field-modal"
+						data-bs-toggle="tooltip"
+						data-bs-placement="top"
+						title="Delete field"
 					>
 						<ImCross className="w-3 h-3" />
 					</label>
@@ -161,8 +155,11 @@ function ProjectFields({ field, page, project, projectIndex, handleAddField, pro
 					className="checkbox mr-2 "
 					checked={fieldMeterChecked}
 					onChange={handleMeterBoxChange}
+					data-bs-toggle="tooltip"
+					data-bs-placement="top"
+					title="Is this field measured in m?"
 				/>
-				<p className="text-neutral-content">m</p>
+				<p className="">m</p>
 			</div>
 
 			{/* ----------------------------------- Delete Field Modal----------------------------------- */}

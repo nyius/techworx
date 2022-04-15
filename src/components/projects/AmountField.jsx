@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import { ImCross } from 'react-icons/im';
 import ProjectsContext from '../../context/projects/ProjectContext';
 import { useFocus } from '../../hooks/useFocus';

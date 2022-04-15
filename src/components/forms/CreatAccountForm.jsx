@@ -6,11 +6,9 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import AlertContext from '../../context/alert/AlertContext';
-import AuthContext from '../../context/auth/AuthContext';
 
 function CreatAccountForm() {
 	const { setAlert } = useContext(AlertContext);
-	const { login } = useContext(AuthContext);
 	let navigate = useNavigate();
 
 	// Password verify ---------------------------------------------------------------------------------------------------//
@@ -24,7 +22,7 @@ function CreatAccountForm() {
 
 	const validationOpt = { resolver: yupResolver(formSchema) };
 
-	const { register, handleSubmit, reset, formState } = useForm(validationOpt);
+	const { register, handleSubmit, formState } = useForm(validationOpt);
 
 	const { errors } = formState;
 

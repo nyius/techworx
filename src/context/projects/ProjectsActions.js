@@ -1,5 +1,5 @@
 import { database } from '../../firebase/firebase';
-import { getDatabase, ref, set, update, remove, onValue, get, child, push } from 'firebase/database';
+import { ref, update, remove, get, child, push } from 'firebase/database';
 import { NewProjectBase } from './ProjectNewBase';
 import moment from 'moment';
 
@@ -56,7 +56,6 @@ export const GetProject = async key => {
 	return get(databaseProjectsRef)
 		.then(snapshot => {
 			if (snapshot.exists()) {
-				const project = snapshot.val();
 				return snapshot.val();
 			}
 		})

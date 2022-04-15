@@ -4,8 +4,8 @@ import ProjectsContext from '../context/projects/ProjectContext';
 import AlertContext from '../context/alert/AlertContext';
 import { FaArrowLeft, FaPlus } from 'react-icons/fa';
 import ProjectFields from '../components/projects/ProjectFields';
-import { removeProjectAndNavigate, UpdateProject, GetProjects } from '../context/projects/ProjectsActions';
-import _, { forEach } from 'lodash';
+import { removeProjectAndNavigate, UpdateProject } from '../context/projects/ProjectsActions';
+import _ from 'lodash';
 import Spinner from '../components/assets/Spinner';
 
 function Project() {
@@ -169,10 +169,10 @@ function Project() {
 				{/* -------------------------------Project Name------------------------------- */}
 				<div className="mt-8  mb-5">
 					<label htmlFor="" className="input-group">
-						<span className="bg-neutral-focus">Project Name</span>
+						<span>Project Name</span>
 						<input
 							type="text"
-							className="input w-full max-w-xl bg-base-200 "
+							className="input w-full max-w-xl bg-base-200"
 							placeholder="Enter a project name"
 							defaultValue={projectName}
 							onChange={handleNameChange}
@@ -240,10 +240,13 @@ function Project() {
 
 									{/* -------------------------------Add new field button -------------------------------*/}
 									<button
-										className="btn btn-block btn-sm border-none flex justify-center items-center bg-base-200 hover:bg-success hover:text-base-300 rounded-lg shadow-xl mt-3"
+										className="btn btn-block btn-sm border-none text-accent flex hover:text-base-200 justify-center items-center bg-base-200 hover:bg-success  rounded-lg shadow-xl mt-3"
 										onClick={handleAddField}
+										data-bs-toggle="tooltip"
+										data-bs-placement="top"
+										title="Add a new field"
 									>
-										<FaPlus />
+										<FaPlus className="" />
 									</button>
 								</div>
 							);

@@ -76,8 +76,6 @@ function Dashboard() {
 					{sortedProjects.map((project, i) => {
 						if (i < 4) {
 							return <UserProjectHero key={project.id} project={project} />;
-						} else {
-							return;
 						}
 					})}
 				</div>

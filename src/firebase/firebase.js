@@ -1,9 +1,9 @@
 import { initializeApp } from 'firebase/app';
-import { getDatabase, push, ref, set } from 'firebase/database';
+import { getDatabase, ref } from 'firebase/database';
 import { GoogleAuthProvider, getAuth } from 'firebase/auth';
 import moment from 'moment';
 
-const createdAtDate = moment();
+// const createdAtDate = moment();
 const firebaseConfig = {
 	apiKey: 'AIzaSyBgfb8SlIy4tLz581v_LoS5P-bH7fF7Ftg',
 	authDomain: 'techworx-4f37a.firebaseapp.com',
@@ -28,7 +28,7 @@ googleProvider.setCustomParameters({
 
 // Email auth ---------------------------------------------------------------------------------------------------//
 
-const databaseProjRef = ref(database, 'projects');
+// const databaseProjRef = ref(database, 'projects');
 // push(databaseProjRef, {
 // 	projectName: 'UntitledProject',
 // 	createdBy: 'New Project',

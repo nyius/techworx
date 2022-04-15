@@ -26,7 +26,7 @@ export const NewProjectBase = {
 	createdBy: 'New Project',
 	createdDate: createdAtDate.valueOf(),
 	editedBy: 'New Project',
-	editedDate: '01/01/2022 00:00 AM',
+	editedDate: createdAtDate.valueOf(),
 	curOpen: false,
 	pages: [[['', [0], false]]],
 };

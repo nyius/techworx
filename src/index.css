@@ -14,10 +14,6 @@
 	outline-offset: 0px;
 }
 
-.input {
-	color: white;
-}
-
 /* handle smooth opening and closing of elements  */
 .smoothExpansionParent:hover .smoothExpansionContent {
 	max-height: 300px;

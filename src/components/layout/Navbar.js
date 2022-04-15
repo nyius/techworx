@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { startLogout } from '../../context/auth/AuthActions';
 import Alert from './Alert';
 import AuthContext from '../../context/auth/AuthContext';

@@ -14,7 +14,7 @@ function AllProjectsList({ project }) {
 		<div
 			className={`grid grid-cols-1 text-accent-content lg:grid-cols-6 rounded-lg hover:bg-base-200 ${
 				curOpen
-					? 'bg-error text-base-300 lg:bg-base-100 lg:text-accent-content hover:bg-error-content hover:text-accent-content'
+					? 'bg-error text-base-300 lg:bg-base-100 lg:text-accent-content hover:bg-warning hover:text-accent-content'
 					: ''
 			}`}
 			data-bs-toggle="tooltip"
@@ -46,9 +46,7 @@ function AllProjectsList({ project }) {
 				<p>{editedBy}</p>
 			</div>
 			<div className="flex cursor-pointer p-1 pr-10 rounded-lg gap-x-2 items-center hidden lg:block">
-				{curOpen && (
-					<p className=" bg-error rounded-md text-error-content font-bold text-center px-2">Currently Open</p>
-				)}
+				{curOpen && <p className=" bg-error rounded-md text-error-content text-center px-2">Currently Open</p>}
 			</div>
 		</div>
 	);

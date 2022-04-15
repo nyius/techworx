@@ -1,11 +1,14 @@
-import React, { useContext, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ProjectsContext from '../../context/projects/ProjectContext';
 import { removeProjectAndNavigate } from '../../context/projects/ProjectsActions';
+import AlertContext from '../../context/alert/AlertContext';
+import moment from 'moment';
 
 function UserProjectHero({ project }) {
-	const { createdBy, createdDate, editedBy, editedDate, projectName, id } = project;
+	const { curOpen, editedBy, editedDate, projectName, id } = project;
 	const { projects, dispatch } = useContext(ProjectsContext);
+	const { setAlert } = useContext(AlertContext);
 
 	const navigate = useNavigate();
 
@@ -31,25 +34,46 @@ function UserProjectHero({ project }) {
 					>
 						{projectName}
 					</p>
-					<p className="italic text-base-content text-sm">Last edited on {editedDate}</p>
+					<p className="italic text-base-content text-sm">
+						Last edited on {moment(editedDate).format('M/D/Y, h:mm a')}
+					</p>
 					<p className="italic text-base-content text-sm">By {editedBy}</p>
 					<div className="mt-3 smoothExpansionContent flex gap-x-3">
-						<button className="btn btn-sm btn-accent" onClick={() => navigate(`/project/${id}`)}>
+						<button
+							className="btn btn-sm btn-accent"
+							onClick={() => {
+								if (curOpen) {
+									setAlert('Project already open!', 'error');
+									return;
+								} else {
+									navigate(`/project/${id}`);
+								}
+							}}
+						>
 							Edit
 						</button>
 						<label className="btn btn-sm btn-outline btn-error" htmlFor="delete-permit-modal">
 							Delete
 						</label>
+						{curOpen && (
+							<label
+								className="btn btn-sm btn-warning"
+								data-bs-toggle="tooltip"
+								data-bs-placement="top"
+								title="This project is currently open"
+							>
+								Open
+							</label>
+						)}
 					</div>
 				</div>
 			</div>
 			{/* ----------------------------------- Delete permit Modal----------------------------------- */}
 			<input type="checkbox" id="delete-permit-modal" className="modal-toggle" />
-			<div className="modal">
-				<div className="modal-box relative flex flex-col">
+			<label htmlFor="delete-permit-modal" className="modal">
+				<label className="modal-box relative flex flex-col">
 					<label htmlFor="delete-permit-modal" className="btn btn-sm btn-circle absolute right-2 top-2">
-						{' '}
-						X{' '}
+						X
 					</label>
 					<p className="text-lg text-accent-content mt-5">
 						Are you sure you want to delete this permit? Theres no going back!
@@ -65,8 +89,8 @@ function UserProjectHero({ project }) {
 					>
 						DELETE
 					</label>
-				</div>
-			</div>
+				</label>
+			</label>
 		</div>
 	);
 }

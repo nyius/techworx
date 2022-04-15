@@ -6,8 +6,6 @@ function PrivateRoutes({ children }) {
 	const { uid } = useContext(AuthContext);
 	const loggedIn = localStorage.getItem('loggedIn');
 
-	const isAuthenticated = uid.uid.length > 0;
-
 	return loggedIn ? <>{children}</> : <Navigate to="/" />;
 }
 

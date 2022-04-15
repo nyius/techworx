@@ -76,9 +76,9 @@ function ProjectFields({ field, page, project, projectIndex, handleAddField, pro
 
 	//---------------------------------------------------------------------------------------------------//
 	return (
-		<div className="mt-4 grid grid-cols-12 gap-6 basis-4/6">
+		<div className="mt-4 flex flex-col xl:grid xl:grid-cols-12 gap-6 basis-4/6">
 			{/* Field Name */}
-			<div className="col-span-7">
+			<div className="col-span-5 lg:col-span-7">
 				<label htmlFor="" className="input-group ">
 					<span className="bg-neutral-focus">
 						<FaGripVertical className="h-3 w-3 fill-base-100" />
@@ -129,10 +129,10 @@ function ProjectFields({ field, page, project, projectIndex, handleAddField, pro
 
 			{/* ------------------------------------------------------------------------ */}
 			{/* Page Total */}
-			<div className="col-span-2 mr-">
+			<div className="col-span-2 ">
 				<label htmlFor="" className="input-group cursor-pointer h-8">
 					<span className="bg-neutral-focus text-base-100">=</span>
-					<div className=" flex justify-center items-center rounded-r-lg h-8 w-full max-w-sm bg-base-100 h-8">
+					<div className=" flex justify-center items-center rounded-r-lg h-8 w-full  bg-base-100 h-8">
 						{total}
 					</div>
 
@@ -161,6 +161,7 @@ function ProjectFields({ field, page, project, projectIndex, handleAddField, pro
 				/>
 				<p className="">m</p>
 			</div>
+			<div className="divider xl:hidden"></div>
 
 			{/* ----------------------------------- Delete Field Modal----------------------------------- */}
 			<input type="checkbox" id="delete-field-modal" className="modal-toggle" />

@@ -7,6 +7,7 @@ import React from 'react';
 import PrivateRoutes from './PrivateRoutes';
 import PublicRoutes from './PublicRoutes';
 import Project from '../pages/Project';
+import AccountSetup from '../pages/AccountSetup';
 
 function AppRoutes() {
 	return (
@@ -26,6 +27,15 @@ function AppRoutes() {
 				element={
 					<PublicRoutes>
 						<CreateAccount />
+					</PublicRoutes>
+				}
+			/>
+			<Route
+				exact
+				path="/account_setup"
+				element={
+					<PublicRoutes>
+						<AccountSetup />
 					</PublicRoutes>
 				}
 			/>

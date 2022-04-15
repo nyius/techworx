@@ -8,6 +8,11 @@ import { removeProjectAndNavigate, UpdateProject } from '../context/projects/Pro
 import _ from 'lodash';
 import Spinner from '../components/assets/Spinner';
 
+// TODO:
+// Fix field values that dont update when a row/amount is deleted
+// new users have to set a name
+//       name is used for who created/updated a project
+
 function Project() {
 	const { projects, loading, dispatch } = useContext(ProjectsContext);
 	const { setAlert } = useContext(AlertContext);
@@ -239,6 +244,7 @@ function Project() {
 									})}
 
 									{/* -------------------------------Add new field button -------------------------------*/}
+									<p className="text-center xl:hidden">Add new field</p>
 									<button
 										className="btn btn-block btn-sm border-none text-accent flex hover:text-base-200 justify-center items-center bg-base-200 hover:bg-success  rounded-lg shadow-xl mt-3"
 										onClick={handleAddField}
@@ -253,7 +259,7 @@ function Project() {
 						})}
 
 						{/*-------------------------------SCOPE OF WORK BLOCK------------------------------- */}
-						<div className="flex basis-5/12 mt-4 justify-center">
+						<div className="flex basis-5/12 mt-4 justify-center order-first xl:order-last">
 							<div className="w-full h-fit bg-base-100 rounded-xl max-w-screen-md">
 								<div className="flex m-2 p-2">
 									<div className="basis-4/6 mx-2">

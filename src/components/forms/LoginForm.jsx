@@ -1,14 +1,14 @@
 import React, { useContext } from 'react';
 import AlertContext from '../../context/alert/AlertContext';
 import AuthContext from '../../context/auth/AuthContext';
-import { startEmailLogin } from '../../context/auth/AuthActions';
+import { startEmailLogin, startLogin, dispatchStartLogin } from '../../context/auth/AuthActions';
 import { useNavigate } from 'react-router-dom';
 
 import validator from 'validator';
 
 function LoginForm() {
 	const { setAlert } = useContext(AlertContext);
-	const { login } = useContext(AuthContext);
+	const { login, dispatch } = useContext(AuthContext);
 	let navigate = useNavigate();
 
 	//---------------------------------------------------------------------------------------------------//
@@ -21,14 +21,25 @@ function LoginForm() {
 		} else {
 			const uid = await startEmailLogin(email, e.target.password.value);
 
+			// If theres no uid, have the user try again (maybe wrong pw)
 			if (!uid) {
 				setAlert('Account not found. Please try again', 'error');
 			} else {
-				login(uid);
-				navigate('/dashboard');
+				// if there is a uid, start the login process by checking our database for their ID
+				startLogin(uid, dispatch).then(user => {
+					if (!user) {
+						// if the user exists but doesnt exist in our database yet, direct them to account setup
+						navigate('/account_setup', { state: uid });
+					} else {
+						// If they do, send them to the dashboard
+						dispatchStartLogin(uid, user, dispatch);
+						navigate('/dashboard');
+					}
+				});
 			}
 		}
 	};
+
 	return (
 		<form onSubmit={handleSubmit}>
 			<p className="text-xl font-bold text-neutral-content mb-2">Email</p>

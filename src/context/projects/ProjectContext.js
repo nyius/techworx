@@ -1,6 +1,8 @@
 import { createContext, useReducer, useEffect } from 'react';
 import ProjectsReducer from './ProjectsReducer';
-import { GetProjects } from './ProjectsActions';
+import { GetProjects, dispatchGetProjects } from './ProjectsActions';
+import { database } from '../../firebase/firebase';
+import { ref, onValue } from 'firebase/database';
 
 const ProjectsContext = createContext();
 

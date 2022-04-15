@@ -1,5 +1,6 @@
 import authReducer from './AuthReducer';
 import React, { useReducer, createContext, useEffect } from 'react';
+import { startLogin } from '../auth/AuthActions';
 
 const AuthContext = createContext();
 
@@ -42,7 +43,7 @@ export const AuthProvider = ({ children }) => {
 		});
 	};
 
-	return <AuthContext.Provider value={{ uid: state, login, logout }}>{children}</AuthContext.Provider>;
+	return <AuthContext.Provider value={{ uid: state, dispatch, logout }}>{children}</AuthContext.Provider>;
 };
 
 export default AuthContext;

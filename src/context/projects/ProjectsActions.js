@@ -1,7 +1,28 @@
 import { database } from '../../firebase/firebase';
-import { ref, update, remove, get, child, push } from 'firebase/database';
+import { ref, update, remove, get, child, push, onValue } from 'firebase/database';
 import { NewProjectBase } from './ProjectNewBase';
 import moment from 'moment';
+
+// Listener for project updates on the DB ------------------------------------------------------------------------------------------------//
+export const databaseProjectListener = dispatchProject => {
+	const databaseProjectsRef = ref(database, `projects/`);
+
+	onValue(
+		databaseProjectsRef,
+		dataSnapshot => {
+			const dataProjects = [];
+			const data = dataSnapshot.val();
+
+			for (const proj in data) {
+				dataProjects.push(data[proj]);
+			}
+			dispatchGetProjects(dataProjects, dispatchProject);
+		},
+		{
+			onlyOnce: false,
+		}
+	);
+};
 
 // Set projects local storage---------------------------------------------------------------------------------------------------//
 export const setProjectsLocalStorage = projects => {

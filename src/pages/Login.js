@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaGoogle } from 'react-icons/fa';
-import { startGoogleLogin } from '../context/auth/AuthActions';
+import { startGoogleLogin, startLogin, dispatchStartLogin } from '../context/auth/AuthActions';
 import AlertContext from '../context/alert/AlertContext';
 import AuthContext from '../context/auth/AuthContext';
 import LoginForm from '../components/forms/LoginForm';
@@ -10,7 +10,7 @@ function Login() {
 	let navigate = useNavigate();
 
 	const { setAlert } = useContext(AlertContext);
-	const { login } = useContext(AuthContext);
+	const { dispatch } = useContext(AuthContext);
 
 	//---------------------------------------------------------------------------------------------------//
 	const handleGoogleLogin = async e => {
@@ -20,7 +20,16 @@ function Login() {
 		if (!uid) {
 			setAlert('Error logging in', 'error');
 		} else {
-			login(uid);
+			startLogin(uid, dispatch).then(user => {
+				if (!user) {
+					// if the user exists but doesnt exist in our database yet, direct them to account setup
+					navigate('/account_setup', { state: uid });
+				} else {
+					// If they do, send them to the dashboard
+					dispatchStartLogin(uid, user, dispatch);
+					navigate('/dashboard');
+				}
+			});
 			navigate('/dashboard');
 		}
 	};

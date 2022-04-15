@@ -8,7 +8,12 @@ import FiltersContext from '../context/filters/FiltersContext';
 import ProjectsSelector from '../selectors/ProjectsSelector';
 import AllProjectsFilters from '../components/layout/AllProjectsFilters';
 import Spinner from '../components/assets/Spinner';
-import { createNewProjectAndNavigate, UpdateProject, GetProjects } from '../context/projects/ProjectsActions';
+import {
+	createNewProjectAndNavigate,
+	UpdateProject,
+	GetProjects,
+	databaseProjectListener,
+} from '../context/projects/ProjectsActions';
 
 function Dashboard() {
 	const { projects, loading, dispatch: dispatchProject } = useContext(ProjectsContext);
@@ -19,6 +24,7 @@ function Dashboard() {
 	const previousProjectPage = location.state;
 	let previousProject, projectIndex;
 
+	// First get all of the projects---------------------------------------------------------------------------------------------------//
 	useEffect(() => {
 		//load all of the projects
 		GetProjects(dispatchProject).then(projs => {
@@ -39,7 +45,12 @@ function Dashboard() {
 		});
 	}, []);
 
-	// If we have projects, sort them by our chosen sorting method---------------------------------------------------------------------------------------------------//
+	// Then listen to the databse for any changes ---------------------------------------------------------------------------------------------------//
+	useEffect(() => {
+		databaseProjectListener(dispatchProject);
+	}, []);
+
+	// If we have projects, sort them by our chosen sorting method ---------------------------------------------------------------------------------------------------//
 	if (projects) sortedProjects = ProjectsSelector(projects, sortBy, search);
 
 	//---------------------------------------------------------------------------------------------------//
@@ -64,7 +75,7 @@ function Dashboard() {
 					{/* New Project Btn */}
 					<button
 						onClick={() => createNewProjectAndNavigate(navigate, dispatchProject)}
-						className="stats bg-base-200 w-full lg:w-14 shadow-md rounded-lg flex-none hover:bg-base-300 cursor-pointer flex flex-col justify-center items-center"
+						className="stats py-2 bg-base-200 w-full shadow-md rounded-lg flex-none hover:bg-success hover:text-base-200 cursor-pointer flex flex-col justify-center items-center lg:w-14 "
 						data-bs-toggle="tooltip"
 						data-bs-placement="top"
 						title="Add a new project"
@@ -86,7 +97,6 @@ function Dashboard() {
 					<p className="font-bold text-accent-content text-xl">All Projects</p>
 
 					{/* -------------------- Filters --------------------*/}
-
 					<AllProjectsFilters />
 
 					{/*-------------------- Generate All Projects List --------------------*/}

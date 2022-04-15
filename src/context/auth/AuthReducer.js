@@ -3,7 +3,8 @@ const authReducer = (state, action) => {
 		case 'LOGIN':
 			return {
 				...state,
-				uid: action.payload,
+				uid: action.payload.uid,
+				user: action.payload.user,
 			};
 		case 'LOGOUT':
 			return {};

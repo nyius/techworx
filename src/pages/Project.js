@@ -10,6 +10,7 @@ import Spinner from '../components/assets/Spinner';
 
 // TODO:
 // Fix 2 things with same uid when making a new project on the dashboard??
+// Make 'accoutn setup' page private
 
 function Project() {
 	const { projects, loading, dispatch } = useContext(ProjectsContext);

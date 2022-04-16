@@ -2,8 +2,7 @@ import { database } from '../../firebase/firebase';
 import { ref, update, remove, get, child, push, onValue } from 'firebase/database';
 import { NewProjectBase } from './ProjectNewBase';
 import moment from 'moment';
-import AuthContext from '../auth/AuthContext';
-import React, { useContext, useEffect, useState } from 'react';
+import _ from 'lodash';
 
 // Listener for project updates on the DB ------------------------------------------------------------------------------------------------//
 export const databaseProjectListener = dispatchProject => {
@@ -139,8 +138,18 @@ export const dispatchNewProject = (newProject, dispatch) =>
 // This combines functions to create a new project in the DB, set it in our context, and then navigate to it---------------------------------------------------------------------------------//
 export const createNewProjectAndNavigate = async (navigate, dispatchProject) => {
 	try {
+		const localData = localStorage.getItem('loggedIn');
+		const data = JSON.parse(localData);
+		const user = data[1];
+		const firstName = user.firstName;
+		const lastName = user.lastName;
+
+		const newProject = _.cloneDeep(NewProjectBase);
+		newProject.createdBy = `${firstName} ${lastName}`;
+		newProject.editedBy = `${firstName} ${lastName}`;
+
 		// set a new project in the database
-		const newProjectKey = await SetNewProject(NewProjectBase);
+		const newProjectKey = await SetNewProject(newProject);
 
 		// Get that new project from the database
 		await GetProject(newProjectKey).then(newProject => {

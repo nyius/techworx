@@ -11,6 +11,8 @@ import Spinner from '../components/assets/Spinner';
 // TODO:
 // Fix 2 things with same uid when making a new project on the dashboard??
 // Make 'accoutn setup' page private
+// Collapse values?
+// drag and drop fields
 
 function Project() {
 	const { projects, loading, dispatch } = useContext(ProjectsContext);
@@ -39,7 +41,21 @@ function Project() {
 	// Set the project to currently open
 	useEffect(() => {
 		if (projects.length > 0) project.curOpen = true;
+		UpdateProject(project, dispatch, projectIndex);
 	}, []);
+
+	// if the user presses the back button or closes the tab, set their state to closed ----------------------------------------------------------------------
+	useEffect(() => {
+		window.addEventListener('unload', unloadSetOpen);
+		return () => window.removeEventListener('unload', unloadSetOpen);
+	});
+
+	const unloadSetOpen = e => {
+		console.log(`??`);
+		project.curOpen = false;
+		UpdateProject(project, dispatch, projectIndex);
+		return;
+	};
 
 	// Handle what to do when the user changes the project name ---------------------------------------------------------------------------------------------------//
 	const handleNameChange = async e => {

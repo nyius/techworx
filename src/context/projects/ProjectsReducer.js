@@ -40,6 +40,7 @@ const ProjectsReducer = (state, action) => {
 			return removeValueState;
 		case 'REMOVE_FIELD':
 			const newProjects = { ...state };
+			console.log(action.payload.field);
 			newProjects.projects[action.payload.projectIndex].pages.forEach(page => {
 				page.splice(action.payload.field, 1);
 			});

@@ -7,10 +7,11 @@ import _ from 'lodash';
 import { useFocus } from '../../hooks/useFocus';
 import { useMountEffect } from '../../hooks/inputMount';
 import { UpdateProject } from '../../context/projects/ProjectsActions';
+import AlertContext from '../../context/alert/AlertContext';
 
 function ProjectFields({ field, page, project, projectIndex, handleAddField, projectName = 'Untitled Project' }) {
 	const { dispatch } = useContext(ProjectsContext);
-
+	const { setAlert } = useContext(AlertContext);
 	// this is to handle setting input when adding a new field ------------------------------------------------------------//
 	const [inputRef, setInputRef] = useFocus();
 	useMountEffect(setInputRef);
@@ -19,6 +20,7 @@ function ProjectFields({ field, page, project, projectIndex, handleAddField, pro
 	const numValues = _.cloneDeep(project.pages[page][field][1]);
 	let fieldName = project.pages[page][field][0];
 	let fieldMeterChecked = _.cloneDeep(project.pages[page][field][2]);
+	let fields = project.pages[page].length;
 
 	// Calculate our totals ----------------------------------------------------------------------------------------------//
 	let total = numValues.reduce((acc, cur) => {
@@ -37,7 +39,6 @@ function ProjectFields({ field, page, project, projectIndex, handleAddField, pro
 	// handle someone adding a new ammount -------------------------------------------------------------------------------//
 	const handeNewAmount = () => {
 		numValues.push('');
-
 		dispatch({
 			type: 'ADD_VALUE',
 			payload: { projectName, page, field, numValues, projectIndex },
@@ -57,11 +58,16 @@ function ProjectFields({ field, page, project, projectIndex, handleAddField, pro
 
 	// handles what happens when a user delets a field---------------------------------------------------------------------------------------------------//
 	const handleDeleteField = async () => {
-		await dispatch({
-			type: 'REMOVE_FIELD',
-			payload: { projectName, page, field, projectIndex },
-		});
-		UpdateProject(project, dispatch, projectIndex);
+		if (fields === 1) {
+			setAlert("Can't delete last field", 'error');
+			return;
+		} else {
+			await dispatch({
+				type: 'REMOVE_FIELD',
+				payload: { projectName, page, field, projectIndex },
+			});
+			UpdateProject(project, dispatch, projectIndex);
+		}
 	};
 
 	// handles what happened when the user is selected on a field name and presses enter--------------------------------------------------------------------------------------//
@@ -149,13 +155,13 @@ function ProjectFields({ field, page, project, projectIndex, handleAddField, pro
 					</div>
 
 					{/* Delete Field Button */}
-
 					<label
 						className="w-6 p-1 bg-base-200 flex justify-center items-center hover:bg-error hover:text-base-300 cursor-pointer"
-						htmlFor="delete-field-modal"
-						data-bs-toggle="tooltip"
-						data-bs-placement="top"
+						// htmlFor="delete-field-modal"
+						// data-bs-toggle="tooltip"
+						// data-bs-placement="top"
 						title="Delete field"
+						onClick={handleDeleteField}
 					>
 						<ImCross className="w-3 h-3" />
 					</label>

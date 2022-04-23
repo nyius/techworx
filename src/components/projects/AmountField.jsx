@@ -39,14 +39,18 @@ function AmountField({ value = '', page, field, project, amountIndex, projectInd
 
 	// Handle deleting an amount------------------------------------------------------------------------------------//
 	const handleDeleteAmount = async e => {
-		numValues.splice(amountIndex, 1);
-		numValues.filter(Boolean);
+		if (numValues.length === 1) {
+			return;
+		} else {
+			numValues.splice(amountIndex, 1);
+			numValues.filter(Boolean);
 
-		await dispatch({
-			type: 'REMOVE_VALUE',
-			payload: { projectName, page, field, numValues, projectIndex },
-		});
-		UpdateProject(project, dispatch, projectIndex);
+			await dispatch({
+				type: 'REMOVE_VALUE',
+				payload: { projectName, page, field, numValues, projectIndex },
+			});
+			UpdateProject(project, dispatch, projectIndex);
+		}
 	};
 
 	// Handle pressing enter to add a new amount -------------------------------------------------------------------//

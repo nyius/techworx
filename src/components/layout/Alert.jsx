@@ -1,7 +1,12 @@
 import React, { useContext } from 'react';
 import AlertContext from '../../context/alert/AlertContext';
 
+/**
+ * Alert component
+ * @returns Returns JSX to display an alert on a page
+ */
 function Alert() {
+	// Get the alert from the context
 	const { alert } = useContext(AlertContext);
 
 	return (

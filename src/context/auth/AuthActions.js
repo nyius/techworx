@@ -1,9 +1,12 @@
 import { signInWithPopup, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { database } from '../../firebase/firebase';
-import { ref, update, remove, get, child, set, push, onValue } from 'firebase/database';
+import { ref, get, set } from 'firebase/database';
 import { auth, googleProvider } from '../../firebase/firebase';
 
-// Handle logging out ---------------------------------------------------------------------------------------------------//
+// ---------------------------------------------------------------------------------------------------//
+/**
+ * Handles logging out.
+ */
 export const startLogout = () => {
 	signOut(auth)
 		.then(e => {
@@ -14,7 +17,13 @@ export const startLogout = () => {
 		});
 };
 
-// Handle registering with email ---------------------------------------------------------------------------------------------------//
+// ---------------------------------------------------------------------------------------------------//
+/**
+ * Handle registering with email.
+ * Expects "email" and "password" parameters to be passed in.
+ * @param {*} param0
+ * @returns
+ */
 export const startEmailRegister = ({ email, password }) => {
 	return createUserWithEmailAndPassword(auth, email, password)
 		.then(userCredential => {
@@ -25,7 +34,14 @@ export const startEmailRegister = ({ email, password }) => {
 		});
 };
 
-// Handle logging in with email ---------------------------------------------------------------------------------------------------//
+// ---------------------------------------------------------------------------------------------------//
+/**
+ * Handles logging in with email.
+ * Expects "email" and "password" parameters to be passed in.
+ * @param {*} email
+ * @param {*} password
+ * @returns logged in users UID
+ */
 export const startEmailLogin = (email, password) => {
 	return signInWithEmailAndPassword(auth, email, password)
 		.then(userCredential => {
@@ -37,7 +53,11 @@ export const startEmailLogin = (email, password) => {
 		});
 };
 
-// Handle logging in with google ---------------------------------------------------------------------------------------------------//
+// ---------------------------------------------------------------------------------------------------//
+/**
+ * Handle logging in with google.
+ * @returns logged in users UID
+ */
 export const startGoogleLogin = () => {
 	return signInWithPopup(auth, googleProvider)
 		.then(userCredential => {
@@ -46,10 +66,20 @@ export const startGoogleLogin = () => {
 		.catch(error => console.log(error));
 };
 
-// Sets the context with info ---------------------------------------------------------------------------------------------------//
+// ---------------------------------------------------------------------------------------------------//
+/**
+ * Handles saving current logged in user in localStorage.
+ * Sets the current user as logged in in their local storage.
+ * Dispatches to auth reducer.
+ * Expects UID, a user, and a dispatch method (from our auth context)
+ * @param {*} uid
+ * @param {*} user
+ * @param {*} dispatch
+ */
 export const dispatchStartLogin = (uid, user, dispatch) => {
 	new Promise((resolve, reject) => {
 		const localUser = JSON.stringify([uid, user]);
+
 		localStorage.setItem('loggedIn', localUser);
 
 		dispatch({
@@ -60,15 +90,20 @@ export const dispatchStartLogin = (uid, user, dispatch) => {
 	});
 };
 
-// looks for our user from the database ---------------------------------------------------------------------------------------------------//
-export const startLogin = (uid, dispatch) => {
+// ---------------------------------------------------------------------------------------------------//
+/**
+ * Handles logging in the user on our database.
+ * Looks for our user from the database.
+ * expects a uid
+ * @param {string} uid
+ * @returns logged in user
+ */
+export const startLogin = uid => {
 	const databaseUserRef = ref(database, `users/${uid}`);
 
 	return get(databaseUserRef)
 		.then(snapshot => {
 			if (snapshot.exists()) {
-				// dispatchStartLogin(uid, dispatch);
-
 				return snapshot.val();
 			}
 		})
@@ -78,7 +113,15 @@ export const startLogin = (uid, dispatch) => {
 		});
 };
 
-// Creates a new user in the database ---------------------------------------------------------------------------------------------------//
+// ---------------------------------------------------------------------------------------------------//
+/**
+ * handles Creating a new user in the database.
+ * Expects a uid, their firstname, and lastName
+ * @param {string} uid
+ * @param {string} firstName
+ * @param {string} lastName
+ * @returns Error is something went wrong
+ */
 export const setUserAccount = async (uid, firstName, lastName) => {
 	try {
 		const databaseUserRef = ref(database, `users/${uid}`);

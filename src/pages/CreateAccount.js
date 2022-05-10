@@ -7,11 +7,19 @@ import AuthContext from '../context/auth/AuthContext';
 import CreatAccountForm from '../components/forms/CreatAccountForm';
 
 function CreateAccount() {
+	// Context for setting Alerts
 	const { setAlert } = useContext(AlertContext);
+	// Context for user login
 	const { login } = useContext(AuthContext);
+
 	let navigate = useNavigate();
 
-	// Handle google login ---------------------------------------------------------------------------------------------------//
+	//---------------------------------------------------------------------------------------------------//
+	/**
+	 * Handle google login
+	 * expects an event(e)
+	 * @param {*} e
+	 */
 	const handleGoogleLogin = async e => {
 		e.preventDefault();
 		const uid = await startGoogleLogin();
@@ -25,7 +33,6 @@ function CreateAccount() {
 	};
 
 	//---------------------------------------------------------------------------------------------------//
-
 	return (
 		<div className="mx-auto w-11/12 sm:w-11/12 md:w-11/12 lg:w-11/12 xl:w-1/4 bg-base-100 h-fit rounded-xl shadow-xl">
 			<div className="flex items-center justify-center bg-success w-full h-16 rounded-t-xl shadow-xl">

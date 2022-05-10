@@ -16,19 +16,23 @@ import {
 } from '../context/projects/ProjectsActions';
 
 function Dashboard() {
+	// Context for all projects
 	const { projects, loading, dispatch: dispatchProject } = useContext(ProjectsContext);
+	// context for handling current search/sorting
 	const { sortBy, search, dispatch: dispatchFilter } = useContext(FiltersContext);
+
 	let navigate = useNavigate();
 	let location = useLocation();
+
 	let sortedProjects = [];
 	const previousProjectPage = location.state;
 	let previousProject, projectIndex;
 
-	// First get all of the projects---------------------------------------------------------------------------------------------------//
+	// useEffect to First get all of the projects---------------------------------------------------------------------------------------------------//
 	useEffect(() => {
 		//load all of the projects
 		GetProjects(dispatchProject).then(projs => {
-			// If we came from a project, gather its info so we can set its curOpen to false---------------------------------------------------------------------------------------------//
+			// If we came from a project, gather its info so we can set its curOpen to false
 			if (previousProjectPage) {
 				previousProject = projs.find(project => {
 					return project.id === previousProjectPage;
@@ -45,7 +49,7 @@ function Dashboard() {
 		});
 	}, []);
 
-	// Then listen to the databse for any changes ---------------------------------------------------------------------------------------------------//
+	// Then listen to the databse for any changes
 	useEffect(() => {
 		databaseProjectListener(dispatchProject);
 	}, []);

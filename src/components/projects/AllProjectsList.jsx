@@ -4,10 +4,18 @@ import { FaFile } from 'react-icons/fa';
 import moment from 'moment';
 import AlertContext from '../../context/alert/AlertContext';
 
+/**
+ * Handles displaying a project on the dashboard list.
+ * @param {*} param0
+ * @returns Styled JSX to go in the dashboard list.
+ */
 function AllProjectsList({ project }) {
+	// Context for creating alerts
 	const { setAlert } = useContext(AlertContext);
 
+	// Pull vars from the current project
 	const { createdBy, curOpen, createdDate, editedBy, editedDate, projectName, id } = project;
+
 	let navigate = useNavigate();
 
 	return (

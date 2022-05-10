@@ -4,7 +4,12 @@ import { NewProjectBase } from './ProjectNewBase';
 import moment from 'moment';
 import _ from 'lodash';
 
-// Listener for project updates on the DB ------------------------------------------------------------------------------------------------//
+// ------------------------------------------------------------------------------------------------//
+/**
+ * Listener for project updates on the DB.
+ * When a project is updated on the database, we need to pull it from the database so the current user has all updates.
+ * @param {*} dispatchProject
+ */
 export const databaseProjectListener = dispatchProject => {
 	const databaseProjectsRef = ref(database, `projects/`);
 
@@ -25,12 +30,24 @@ export const databaseProjectListener = dispatchProject => {
 	);
 };
 
-// Set projects local storage---------------------------------------------------------------------------------------------------//
+// ---------------------------------------------------------------------------------------------------//
+/**
+ * Set projects local storage.
+ * Expects an array of projects.
+ * @param {array} projects
+ */
 export const setProjectsLocalStorage = projects => {
 	localStorage.setItem('projects', JSON.stringify(projects));
 };
 
-// Dispatches our removed permit after we've edited out DB---------------------------------------------------------------------------------------------------//
+// ---------------------------------------------------------------------------------------------------//
+/**
+ * Handles getting projects from our context.
+ * Expects projects (array), and a dispatch for projects Context.
+ * @param {array} projects
+ * @param {*} dispatch
+ * @returns
+ */
 export const dispatchGetProjects = (projects, dispatch) =>
 	new Promise((resolve, reject) => {
 		dispatch({
@@ -40,7 +57,13 @@ export const dispatchGetProjects = (projects, dispatch) =>
 		resolve();
 	});
 
-// This gets all projects ---------------------------------------------------------------------------------------------------//
+// ---------------------------------------------------------------------------------------------------//
+/**
+ * This gets all projects.
+ * Expects a dispatch from projects context.
+ * @param {*} dispatch
+ * @returns an array of projects
+ */
 export const GetProjects = async dispatch => {
 	const databaseRef = ref(database);
 
@@ -55,7 +78,10 @@ export const GetProjects = async dispatch => {
 						...project.val(),
 					});
 				});
+
+				// Set the projects in localStorage
 				setProjectsLocalStorage(projects);
+				// Add projects to context
 				dispatchGetProjects(projects, dispatch);
 
 				return projects;
@@ -71,7 +97,13 @@ export const GetProjects = async dispatch => {
 		});
 };
 
-// This gets a single project ---------------------------------------------------------------------------------------------------//
+// ---------------------------------------------------------------------------------------------------//
+/**
+ * This gets a single project when loading a proejct page.
+ * Expects a project id (key)
+ * @param {*} key
+ * @returns the project from the database
+ */
 export const GetProject = async key => {
 	const databaseProjectsRef = ref(database, `projects/${key}`);
 
@@ -87,7 +119,14 @@ export const GetProject = async key => {
 		});
 };
 
-// Updates our "editedDate and editedBy" properties on a permit ---------------------------------------------------------------------------------------------------//
+// ---------------------------------------------------------------------------------------------------//
+/**
+ * Updates our "editedDate and editedBy" properties on a permit.
+ * Expects the index of the project (index being the array position of the project in the projects array in the projects context), the projects context dispatch, and the full user from auth context.
+ * @param {*} projectIndex
+ * @param {*} dispatch
+ * @param {*} user
+ */
 export const updateLastEdited = (projectIndex, dispatch, user) => {
 	const editedDate = moment();
 	const { firstName, lastName } = user;
@@ -98,7 +137,15 @@ export const updateLastEdited = (projectIndex, dispatch, user) => {
 	});
 };
 
-// This updates a project ---------------------------------------------------------------------------------------------------//
+// ---------------------------------------------------------------------------------------------------//
+/**
+ * handles updating a project anything something is changed.
+ * Expects the full project (object), the projects contect dispatch, and the index position of the project on the projects context array.
+ * @param {object} project
+ * @param {*} dispatch
+ * @param {*} projectIndex
+ * @returns an error if something goes wrong.
+ */
 export const UpdateProject = async (project, dispatch, projectIndex) => {
 	const databaseProjectsRef = ref(database, `projects/${project.id}`);
 	const user = JSON.parse(localStorage.getItem('loggedIn'))[1];
@@ -114,7 +161,13 @@ export const UpdateProject = async (project, dispatch, projectIndex) => {
 		});
 };
 
-// This sets a new project in our database ---------------------------------------------------------------------------------------------------//
+// ---------------------------------------------------------------------------------------------------//
+/**
+ * Handles creation of a new project on the database.
+ * Expects a project (object)
+ * @param {object} project
+ * @returns databse key for the newly created project
+ */
 export const SetNewProject = async project => {
 	const databaseProjectsRef = ref(database, `projects/`);
 
@@ -125,7 +178,14 @@ export const SetNewProject = async project => {
 	return key;
 };
 
-// This dispatches our project to our context (neccessary as a promise function so we don't navigate away until this is done)--------------------------------------------------//
+// --------------------------------------------------//
+/**
+ * This dispatches our project to our context (neccessary as a promise function so we don't navigate away until this is done).
+ * Expects a project (object), and a dispatch from the projects context.
+ * @param {object} newProject
+ * @param {*} dispatch
+ * @returns a promise
+ */
 export const dispatchNewProject = (newProject, dispatch) =>
 	new Promise((resolve, reject) => {
 		dispatch({
@@ -135,7 +195,15 @@ export const dispatchNewProject = (newProject, dispatch) =>
 		resolve();
 	});
 
-// This combines functions to create a new project in the DB, set it in our context, and then navigate to it---------------------------------------------------------------------------------//
+// ---------------------------------------------------------------------------------//
+/**
+ * This combines functions to create a new project in the DB, set it in our context, and then navigate to it.
+ * Navigates to new project page on success.
+ * Expects our navigate function and projects context dispatch.
+ * @param {*} navigate
+ * @param {*} dispatchProject
+ * @returns an error if something goes wrong.
+ */
 export const createNewProjectAndNavigate = async (navigate, dispatchProject) => {
 	try {
 		const localData = localStorage.getItem('loggedIn');
@@ -144,7 +212,9 @@ export const createNewProjectAndNavigate = async (navigate, dispatchProject) => 
 		const firstName = user.firstName;
 		const lastName = user.lastName;
 
+		// Create a new base project by cloning our template
 		const newProject = _.cloneDeep(NewProjectBase);
+		// set createdby and editedby
 		newProject.createdBy = `${firstName} ${lastName}`;
 		newProject.editedBy = `${firstName} ${lastName}`;
 
@@ -165,7 +235,14 @@ export const createNewProjectAndNavigate = async (navigate, dispatchProject) => 
 	}
 };
 
-// Dispatches our removed permit after we've edited out DB---------------------------------------------------------------------------------------------------//
+// ---------------------------------------------------------------------------------------------------//
+/**
+ * Dispatches our removed permit after we've edited the DB.
+ * Expects an array index number for the project (position in the projects context array), and our projects context dispatch.
+ * @param {*} projectIndex
+ * @param {*} dispatch
+ * @returns a promise
+ */
 export const dispatchRemoveProject = (projectIndex, dispatch) =>
 	new Promise((resolve, reject) => {
 		dispatch({
@@ -175,7 +252,16 @@ export const dispatchRemoveProject = (projectIndex, dispatch) =>
 		resolve();
 	});
 
-// Removes a project and navigates to the home page. combines other functions---------------------------------------------------------------------------------------------------//
+// ---------------------------------------------------------------------------------------------------//
+/**
+ * Removes a project and navigates to the home page. combines other functions.
+ * Expects a navigatge function, an array index number for the project (position in the projects context array), our projects context dispatch, and permit id
+ * @param {*} navigate
+ * @param {*} dispatch
+ * @param {*} projectIndex
+ * @param {*} id
+ * @returns error is comething fails
+ */
 export const removeProjectAndNavigate = async (navigate, dispatch, projectIndex, id) => {
 	try {
 		const databaseProjectRef = ref(database, `projects/${id}`);
@@ -189,7 +275,14 @@ export const removeProjectAndNavigate = async (navigate, dispatch, projectIndex,
 	}
 };
 
-// Dispatches our removed permit after we've edited out DB---------------------------------------------------------------------------------------------------//
+// ---------------------------------------------------------------------------------------------------//
+/**
+ * Handles setting the current project to open inside of our context.
+ * Expects an array index number for the project (position in the projects context array), and our projects context dispatch.
+ * @param {*} projectIndex
+ * @param {*} dispatch
+ * @returns
+ */
 export const dispatchCurOpen = (projectIndex, dispatch) =>
 	new Promise((resolve, reject) => {
 		dispatch({

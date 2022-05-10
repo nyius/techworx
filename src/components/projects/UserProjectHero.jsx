@@ -5,10 +5,18 @@ import { removeProjectAndNavigate } from '../../context/projects/ProjectsActions
 import AlertContext from '../../context/alert/AlertContext';
 import moment from 'moment';
 
+/**
+ * handles creating a hero card to display a project
+ * @param {*} param0
+ * @returns Returns JSX to display a project card
+ */
 function UserProjectHero({ project }) {
-	const { curOpen, editedBy, editedDate, projectName, id } = project;
+	// projects context to get access to projects
 	const { projects, dispatch } = useContext(ProjectsContext);
+	// Get alert context
 	const { setAlert } = useContext(AlertContext);
+
+	const { curOpen, editedBy, editedDate, projectName, id } = project;
 
 	const navigate = useNavigate();
 
@@ -18,10 +26,15 @@ function UserProjectHero({ project }) {
 	});
 
 	//---------------------------------------------------------------------------------------------------//
+	/**
+	 * handles deleting a permit.
+	 * Uses removeProjectAndNavigate from projects actions
+	 */
 	const handleDeletePermit = () => {
 		removeProjectAndNavigate(navigate, dispatch, projectIndex, project.id);
 	};
 
+	//---------------------------------------------------------------------------------------------------//
 	return (
 		<div>
 			<div className="rounded-lg shadow-md smoothExpansionParent flex-1 w-95 bg-base-200 p-3 justify-start hover:bg-base-300 cursor-pointer overflow-hidden ...">
@@ -68,6 +81,7 @@ function UserProjectHero({ project }) {
 					</div>
 				</div>
 			</div>
+
 			{/* ----------------------------------- Delete permit Modal----------------------------------- */}
 			<input type="checkbox" id="delete-permit-modal" className="modal-toggle" />
 			<label htmlFor="delete-permit-modal" className="modal">

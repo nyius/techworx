@@ -5,12 +5,20 @@ import { useFocus } from '../../hooks/useFocus';
 import { useMountEffect } from '../../hooks/inputMount';
 import { UpdateProject } from '../../context/projects/ProjectsActions';
 
+/**
+ * Handles displaying an 'amount' value on a project page, inside of a field.
+ * (eg. "new trench/bore" ---> 35m)
+ * @param {*} param0
+ * @returns Styled JSX
+ */
 function AmountField({ value = '', page, field, project, amountIndex, projectIndex, projectName }) {
+	// Focus state to be used when making a new amount field. Sets the cursor to the newly created input box.
 	const [focus, setFocus] = useState(true);
 
+	// Get our projects dispatch
 	const { dispatch } = useContext(ProjectsContext);
 
-	// this is to handle setting input when adding a new field ------------------------------------------------------------//
+	// this is to handle setting input when adding a new field
 	const [inputRef, setInputRef] = useFocus();
 	useMountEffect(setInputRef);
 
@@ -23,7 +31,11 @@ function AmountField({ value = '', page, field, project, amountIndex, projectInd
 	}, [numValues]);
 
 	//---------------------------------------------------------------------------------------------------//
-	// whenever we update an amount, modify our context
+	/**
+	 *  handleswhenever we update an amount field, update our context
+	 * expects an event (e). uses e.target.value.
+	 * @param {*} e
+	 */
 	const handleAmountChange = async e => {
 		// push our new number to our array
 		numValues[amountIndex] = Number(e.target.value);
@@ -37,7 +49,13 @@ function AmountField({ value = '', page, field, project, amountIndex, projectInd
 		UpdateProject(project, dispatch, projectIndex);
 	};
 
-	// Handle deleting an amount------------------------------------------------------------------------------------//
+	// ------------------------------------------------------------------------------------//
+	/**
+	 * Handle deleting an amount field.
+	 * Desn't do anything if theres only one amount field.
+	 * @param {*} e
+	 * @returns nothing if theres only a single amount field.
+	 */
 	const handleDeleteAmount = async e => {
 		if (numValues.length === 1) {
 			return;
@@ -53,7 +71,13 @@ function AmountField({ value = '', page, field, project, amountIndex, projectInd
 		}
 	};
 
-	// Handle pressing enter to add a new amount -------------------------------------------------------------------//
+	// -------------------------------------------------------------------//
+	/**
+	 * Handle pressing enter to add a new amount.
+	 * expects an event (e)
+	 * @param {*} e
+	 * @returns
+	 */
 	const handleEnterKey = e => {
 		if (e.key === 'Enter') {
 			if (numValues[amountIndex] === '') {
@@ -73,7 +97,6 @@ function AmountField({ value = '', page, field, project, amountIndex, projectInd
 	};
 
 	//---------------------------------------------------------------------------------------------------//
-
 	return (
 		<label
 			htmlFor=""

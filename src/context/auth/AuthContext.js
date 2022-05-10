@@ -3,6 +3,11 @@ import React, { useReducer, createContext, useEffect } from 'react';
 
 const AuthContext = createContext();
 
+/**
+ * Context to handle the current user.
+ * @param {*} param0
+ * @returns
+ */
 export const AuthProvider = ({ children }) => {
 	const loggedIn = JSON.parse(localStorage.getItem('loggedIn'));
 

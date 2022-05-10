@@ -6,21 +6,35 @@ import AuthContext from '../../context/auth/AuthContext';
 import { createNewProjectAndNavigate } from '../../context/projects/ProjectsActions';
 import ProjectsContext from '../../context/projects/ProjectContext';
 
+/**
+ * Handle the navbar
+ * @returns Returns JSX that displays the navigation bar
+ */
 function Navbar() {
+	// Get the logout context to use with the navigation bar logout button
 	const { logout } = useContext(AuthContext);
+	// Get dispatch from the project context
 	const { dispatch: dispatchProject } = useContext(ProjectsContext);
+
 	let navigate = useNavigate();
 	const { pathname } = useLocation();
 
+	//----------------------------------------------------------------
+	/**
+	 * Handles the user logging out
+	 * Navigates them to the login page
+	 */
 	const handleLogout = () => {
 		navigate('/');
 		logout();
 		startLogout();
 	};
 
+	//---------------------------------------------------------------------------------------------------//
 	return (
 		<div>
 			<div className="navbar h-fit lg:h-1 flex-row shadow-lg bg-base-100 px-10">
+				{/* -------------------Hamburger ------------------- */}
 				<div className="navbar-start lg:hidden">
 					<div className="dropdown">
 						<label tabIndex="0" className="btn btn-ghost btn-circle">
@@ -59,6 +73,7 @@ function Navbar() {
 						</ul>
 					</div>
 				</div>
+				{/* ------------------- Logo Text ------------------- */}
 				<div className="flex-1 m-0 md:m-2">
 					<button
 						className="btn hidden lg:inline-flex btn-ghost normal-case btn-lg text-xl"
@@ -67,6 +82,8 @@ function Navbar() {
 						TechworX
 					</button>
 				</div>
+
+				{/* ------------------- Links ------------------- */}
 				<div className="flex flex-col md:flex-row items-center justify-center">
 					<button
 						className="btn btn-lg btn-ghost hidden md:inline-flex "

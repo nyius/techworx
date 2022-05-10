@@ -2,6 +2,7 @@ import moment from 'moment';
 
 const createdAtDate = moment();
 
+// For creating a new project.
 export const NewProjectBase = {
 	projectName: 'UntitledProject',
 	createdBy: `Anon`,

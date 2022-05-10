@@ -15,14 +15,21 @@ import Spinner from '../components/assets/Spinner';
 // drag and drop fields
 
 function Project() {
+	// Context for all projects, loading, and dispatch
 	const { projects, loading, dispatch } = useContext(ProjectsContext);
+	// Alert context to create alerts
 	const { setAlert } = useContext(AlertContext);
+
+	// State to handle what project page the user is on
 	const [pageTab, setPageTab] = useState(1);
+
 	const { pathname } = useLocation();
 	let navigate = useNavigate();
 	let params = useParams();
+
 	let project, projectName, projectIndex, pages, curPageFields;
 
+	//If the user isn't loading the projects, grab them from the context
 	if (!loading) {
 		// Get our project from the passed in state
 		project = projects.find(el => {
@@ -34,30 +41,42 @@ function Project() {
 		projectIndex = projects.findIndex(el => {
 			return el.projectName === projectName;
 		});
+
+		// Create deep clones of the projects pages and the projects fields
 		pages = _.cloneDeep(project.pages);
 		curPageFields = _.cloneDeep(project.pages[pageTab - 1]);
 	}
 
-	// Set the project to currently open
+	// useEffect to Set the project to currently open on the database ----------------------------------------------------------------------
 	useEffect(() => {
 		if (projects.length > 0) project.curOpen = true;
 		UpdateProject(project, dispatch, projectIndex);
 	}, []);
 
-	// if the user presses the back button or closes the tab, set their state to closed ----------------------------------------------------------------------
+	// if the user presses the back button or closes the tab, set their project state to closed on the database (so other users can open and edit it) ----------------------------------------------------------------------
 	useEffect(() => {
 		window.addEventListener('unload', unloadSetOpen);
 		return () => window.removeEventListener('unload', unloadSetOpen);
 	});
 
+	//---------------------------------------------------------------------------------------------------//
+	/**
+	 * Handles setting the current open project to false so that other users can open it/edit it
+	 * @param {*} e
+	 * @returns
+	 */
 	const unloadSetOpen = e => {
-		console.log(`??`);
 		project.curOpen = false;
 		UpdateProject(project, dispatch, projectIndex);
 		return;
 	};
 
-	// Handle what to do when the user changes the project name ---------------------------------------------------------------------------------------------------//
+	//  ---------------------------------------------------------------------------------------------------//
+	/**
+	 * Handle what to do when the user changes the project name. Uses e.target.value
+	 * expects an event (e)
+	 * @param {*} e
+	 */
 	const handleNameChange = async e => {
 		projectName = e.target.value.trim();
 
@@ -68,7 +87,12 @@ function Project() {
 		UpdateProject(project, dispatch, projectIndex);
 	};
 
-	// Handle what to do when the user adds a new field ---------------------------------------------------------------------------------------------------//
+	// ---------------------------------------------------------------------------------------------------//
+	/**
+	 * Handle what to do when the user adds a new field to their project (eg. New trench/bore, new vault, etc).
+	 * Dispatches to the projects reducer/context.
+	 * calls UpdateProject to handle updating the database
+	 */
 	const handleAddField = async () => {
 		await dispatch({
 			type: 'ADD_FIELD',
@@ -78,16 +102,25 @@ function Project() {
 		UpdateProject(project, dispatch, projectIndex);
 	};
 
-	// Handle what to do when the user adds a new page ---------------------------------------------------------------------------------------------------//
+	// ---------------------------------------------------------------------------------------------------//
+	/**
+	 * Handles what to do when the user adds a new page.
+	 * Dispatches to the projects reducer/context.
+	 * calls UpdateProject to handle updating the database
+	 */
 	const handleAddPage = async () => {
 		//push a copy of page [0] to the pages array. page 0 will be our 'base' page
 		const pageCopy = _.cloneDeep(pages[0]);
+
+		// Set all of the values for each field on the new page to 0 (they shouldn't be filled in)
 		pageCopy.forEach(pageField => {
 			pageField[1] = [0];
 		});
 
+		// Push the new page to our pages arr
 		pages.push(pageCopy);
 
+		// dispatch the new page to projects reducer
 		await dispatch({
 			type: 'ADD_PAGE',
 			payload: { projectIndex, pages },
@@ -96,40 +129,61 @@ function Project() {
 		UpdateProject(project, dispatch, projectIndex);
 	};
 
-	// handle deleting a certain page ---------------------------------------------------------------------------------------------------//
+	// ---------------------------------------------------------------------------------------------------//
+	/**
+	 * Handle deleting a certain page
+	 * Dispatches to the projects reducer/context.
+	 * calls UpdateProject to handle updating the database
+	 *
+	 * @returns
+	 */
 	const handleDeletePage = async () => {
+		// Check if its the last page so the user doesn't delete it
 		if (pages.length === 1) {
 			setAlert("Can't delete last page", 'error');
 			return;
 		}
 
-		// Check if they're on the first page
+		// Check if they're on the first page, so that the current page 'tab' doesn't mess up and go negative
 		if (pageTab === 1) {
 			setPageTab(1);
 		} else {
 			setPageTab(pageTab - 1);
 		}
 
+		// dispatch the new page to projects reducer
 		await dispatch({
 			type: 'REMOVE_PAGE',
 			payload: { projectIndex, page: pageTab - 1 },
 		});
+
 		UpdateProject(project, dispatch, projectIndex);
 	};
 
-	// What to do when deleting the whole permit -----------------------------------------------------------------------------------------------//
+	// -----------------------------------------------------------------------------------------------//
+	/**
+	 * What to do when deleting the whole permit.
+	 * Uses removeProjectAndNavigate from ProjectActions.
+	 * Navigates the user back to the dashboard after its deleted
+	 */
 	const handleDeletePermit = () => {
 		removeProjectAndNavigate(navigate, dispatch, projectIndex, project.id);
 	};
 
-	// Calculate Route Totals and output div element ---------------------------------------------------------------------------------------------------//
+	// ---------------------------------------------------------------------------------------------------//
+	/**
+	 * Calculate the total Route Totals and outputs a div element to display totals.
+	 * @returns
+	 */
 	const CalculateRouteTotals = () => {
 		const routeTotals = [];
 
+		// Loop over each page, and each field, and adds up all values
 		pages.forEach((page, i) => {
 			page.forEach((field, j) => {
 				const pageTotal = field[1].reduce((acc, cur) => Number(acc) + Number(cur));
 
+				// if this field exists in our array, add to it. Else, create the new field in our array to start counting on
 				routeTotals[j] ? (routeTotals[j] += pageTotal) : (routeTotals[j] = pageTotal);
 			});
 		});
@@ -144,7 +198,11 @@ function Project() {
 		});
 	};
 
-	// Calculate Page Totals and output div element ---------------------------------------------------------------------------------------------------//
+	// ---------------------------------------------------------------------------------------------------//
+	/**
+	 * Calculate individual Page Totals and outputs a div element
+	 * @returns
+	 */
 	const CalculatePageTotals = () => {
 		return curPageFields.map((field, i) => {
 			if (typeof field !== 'undefined') {
@@ -159,6 +217,11 @@ function Project() {
 		});
 	};
 
+	//---------------------------------------------------------------------------------------------------//
+	/**
+	 * Displays field names for the totals container. Loops over each field the user created.
+	 * @returns
+	 */
 	const DisplayFieldNames = () => {
 		return curPageFields.map((field, i) => {
 			if (typeof field !== 'undefined') {

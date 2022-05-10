@@ -1,5 +1,11 @@
 import React from 'react';
 
+/**
+ * Simpler spinner animation for loading
+ * Takes in an optional msg to display
+ * @param {*} param0
+ * @returns Returns the JSX for the spinner
+ */
 function Spinner({ msg }) {
 	return (
 		<div className="w-100 mt-20 h-full w-full flex items-center justify-center">

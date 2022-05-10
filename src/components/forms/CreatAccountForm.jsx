@@ -7,11 +7,21 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import AlertContext from '../../context/alert/AlertContext';
 
+/**
+ * Handeles the create new account form
+ * @returns Returns JSX that displays the new account form
+ */
 function CreatAccountForm() {
+	// Alert context
 	const { setAlert } = useContext(AlertContext);
+
 	let navigate = useNavigate();
 
-	// Password verify ---------------------------------------------------------------------------------------------------//
+	//  ---------------------------------------------------------------------------------------------------//
+	/**
+	 * Password verify. This was snagged from online somehwere but i forgot to save where.
+	 * uses Yup to do basic field validation to check if theres a propert password and email.
+	 */
 	const formSchema = Yup.object().shape({
 		password: Yup.string().required('Password is required').min(6, 'Password should be 6 or more chararcter long'),
 		passwordConfirm: Yup.string()
@@ -26,7 +36,15 @@ function CreatAccountForm() {
 
 	const { errors } = formState;
 
-	// Submit login ---------------------------------------------------------------------------------------------------//
+	// ---------------------------------------------------------------------------------------------------//
+	/**
+	 * Handles the user submitting a new account creation.
+	 * Checks if all info is correct and that the user doesn't already exist.
+	 * Expects form data.
+	 * Navigates the user to the dashboard if success
+	 * @param {*} data
+	 * @returns
+	 */
 	const onFormSubmit = async data => {
 		if (!data.email || !validator.isEmail(data.email)) {
 			setAlert('Please enter a valid email', 'error');
@@ -43,6 +61,7 @@ function CreatAccountForm() {
 		}
 	};
 
+	//---------------------------------------------------------------------------------------------------//
 	return (
 		<form onSubmit={handleSubmit(onFormSubmit)}>
 			{/* -------------------------------------------------- */}

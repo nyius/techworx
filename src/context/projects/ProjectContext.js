@@ -1,11 +1,14 @@
 import { createContext, useReducer, useEffect } from 'react';
 import ProjectsReducer from './ProjectsReducer';
-import { GetProjects, dispatchGetProjects } from './ProjectsActions';
-import { database } from '../../firebase/firebase';
-import { ref, onValue } from 'firebase/database';
+import { GetProjects } from './ProjectsActions';
 
 const ProjectsContext = createContext();
 
+/**
+ * Context that handles the current project.
+ * @param {*} param0
+ * @returns
+ */
 export const ProjectsProvider = ({ children }) => {
 	const loggedIn = localStorage.getItem('loggedIn');
 
@@ -15,6 +18,7 @@ export const ProjectsProvider = ({ children }) => {
 		loading: true,
 	};
 
+	// Ig the user is logged in, get all the projects.
 	useEffect(() => {
 		if (loggedIn) GetProjects(dispatch);
 	}, []);

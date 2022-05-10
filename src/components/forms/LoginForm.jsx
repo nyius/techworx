@@ -6,12 +6,24 @@ import { useNavigate } from 'react-router-dom';
 
 import validator from 'validator';
 
+/**
+ * Handles the Login form
+ * @returns Returns JSX that displays the login form
+ */
 function LoginForm() {
+	// Alert Context to display alerts
 	const { setAlert } = useContext(AlertContext);
+	// Login context to set login info
 	const { login, dispatch } = useContext(AuthContext);
 	let navigate = useNavigate();
 
 	//---------------------------------------------------------------------------------------------------//
+	/**
+	 * Handles the submission of the login form.
+	 * Expects an event (e).
+	 * If the user is successfully logged in, redirects to the dashboard
+	 * @param {*} e
+	 */
 	const handleSubmit = async e => {
 		e.preventDefault();
 		const email = e.target.email.value;
@@ -40,6 +52,7 @@ function LoginForm() {
 		}
 	};
 
+	//----------------------------------------------------------------
 	return (
 		<form onSubmit={handleSubmit}>
 			<p className="text-xl font-bold text-neutral-content mb-2">Email</p>

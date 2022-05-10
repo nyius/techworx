@@ -10,8 +10,11 @@ import { UpdateProject } from '../../context/projects/ProjectsActions';
 import AlertContext from '../../context/alert/AlertContext';
 
 function ProjectFields({ field, page, project, projectIndex, handleAddField, projectName = 'Untitled Project' }) {
+	// Get our dispatch for projects context
 	const { dispatch } = useContext(ProjectsContext);
+	// get our alerts context
 	const { setAlert } = useContext(AlertContext);
+
 	// this is to handle setting input when adding a new field ------------------------------------------------------------//
 	const [inputRef, setInputRef] = useFocus();
 	useMountEffect(setInputRef);
@@ -22,7 +25,7 @@ function ProjectFields({ field, page, project, projectIndex, handleAddField, pro
 	let fieldMeterChecked = _.cloneDeep(project.pages[page][field][2]);
 	let fields = project.pages[page].length;
 
-	// Calculate our totals ----------------------------------------------------------------------------------------------//
+	// Calculate our totals (to be used when displaying each field total) ----------------------------------------------------------------------------------------------//
 	let total = numValues.reduce((acc, cur) => {
 		if (cur === '') {
 			return acc;
@@ -36,7 +39,10 @@ function ProjectFields({ field, page, project, projectIndex, handleAddField, pro
 		inputRef.current.value = fieldName;
 	}, [fieldName]);
 
-	// handle someone adding a new ammount -------------------------------------------------------------------------------//
+	// -------------------------------------------------------------------------------//
+	/**
+	 * handle adding a new ammount field.
+	 */
 	const handeNewAmount = () => {
 		numValues.push('');
 		dispatch({
@@ -45,7 +51,12 @@ function ProjectFields({ field, page, project, projectIndex, handleAddField, pro
 		});
 	};
 
-	// Handle when the field name is changed ----------------------------------------------------------------------------//
+	// ----------------------------------------------------------------------------//
+	/**
+	 * Handles when the field name is changed.
+	 * expects an event (e).
+	 * @param {*} e
+	 */
 	const handleEditFieldName = async e => {
 		const newFieldName = (fieldName = e.target.value);
 
@@ -56,7 +67,11 @@ function ProjectFields({ field, page, project, projectIndex, handleAddField, pro
 		UpdateProject(project, dispatch, projectIndex);
 	};
 
-	// handles what happens when a user delets a field---------------------------------------------------------------------------------------------------//
+	// ---------------------------------------------------------------------------------------------------//
+	/**
+	 * handles what happens when a user delets a field.
+	 * @returns errors if theres only one field left
+	 */
 	const handleDeleteField = async () => {
 		if (fields === 1) {
 			setAlert("Can't delete last field", 'error');
@@ -70,7 +85,14 @@ function ProjectFields({ field, page, project, projectIndex, handleAddField, pro
 		}
 	};
 
-	// handles what happened when the user is selected on a field name and presses enter--------------------------------------------------------------------------------------//
+	// --------------------------------------------------------------------------------------//
+	/**
+	 * handles what happened when the user is selected on a field name and presses enter.
+	 * Adds a new field.
+	 * Expects an event (e)
+	 * @param {*} e
+	 * @returns
+	 */
 	const handleEnterKey = e => {
 		if (e.key === 'Enter') {
 			if (fieldName === '') {
@@ -82,7 +104,10 @@ function ProjectFields({ field, page, project, projectIndex, handleAddField, pro
 		}
 	};
 
-	// Handle what happens when the meter checkbox is clicked. Gets flipped in the reducer-------------------------------------------------------------------------------------//
+	// -------------------------------------------------------------------------------------//
+	/**
+	 * Handle what happens when the meter checkbox is clicked. Gets flipped in the reducer
+	 */
 	const handleMeterBoxChange = async () => {
 		await dispatch({
 			type: 'SET_METER_CHECKED',
@@ -114,8 +139,7 @@ function ProjectFields({ field, page, project, projectIndex, handleAddField, pro
 				</label>
 			</div>
 
-			{/* ------------------------------------------------------------------------ */}
-			{/* Field Amount */}
+			{/* ---------------------------------------------- Field Amount -------------------------------------------------- */}
 			<div className="col-span-2">
 				{numValues.map((value, i) => {
 					return (
@@ -133,7 +157,7 @@ function ProjectFields({ field, page, project, projectIndex, handleAddField, pro
 					);
 				})}
 
-				{/* Add new amount button */}
+				{/* ---------------------------------------------- Add new amount button ---------------------------------------------- */}
 				<button
 					className={`btn btn-block btn-sm border-none flex justify-center items-center bg-base-200 rounded-lg shadow-md mt-1 hover:bg-success text-accent hover:text-base-200`}
 					onClick={handeNewAmount}
@@ -145,8 +169,7 @@ function ProjectFields({ field, page, project, projectIndex, handleAddField, pro
 				</button>
 			</div>
 
-			{/* ------------------------------------------------------------------------ */}
-			{/* Page Total */}
+			{/* ---------------------------------------------- Page Total---------------------------------------------- */}
 			<div className="col-span-2 ">
 				<label htmlFor="" className="input-group cursor-pointer h-8">
 					<span className="bg-neutral-focus text-base-100">=</span>
@@ -157,9 +180,6 @@ function ProjectFields({ field, page, project, projectIndex, handleAddField, pro
 					{/* Delete Field Button */}
 					<label
 						className="w-6 p-1 bg-base-200 flex justify-center items-center hover:bg-error hover:text-base-300 cursor-pointer"
-						// htmlFor="delete-field-modal"
-						// data-bs-toggle="tooltip"
-						// data-bs-placement="top"
 						title="Delete field"
 						onClick={handleDeleteField}
 					>

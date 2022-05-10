@@ -7,12 +7,19 @@ import AuthContext from '../context/auth/AuthContext';
 import LoginForm from '../components/forms/LoginForm';
 
 function Login() {
-	let navigate = useNavigate();
-
+	// get alert context
 	const { setAlert } = useContext(AlertContext);
+	// get dispatch auth context to handle login
 	const { dispatch } = useContext(AuthContext);
 
+	let navigate = useNavigate();
+
 	//---------------------------------------------------------------------------------------------------//
+	/**
+	 * Handles logging in with Google
+	 * expects an event(e)
+	 * @param {*} e
+	 */
 	const handleGoogleLogin = async e => {
 		e.preventDefault();
 		const uid = await startGoogleLogin();

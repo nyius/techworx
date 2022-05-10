@@ -2,9 +2,21 @@ import React, { useContext } from 'react';
 import { FaArrowUp, FaArrowDown } from 'react-icons/fa';
 import FiltersContext from '../../context/filters/FiltersContext';
 
+/**
+ * Handles displaying filters above the rows on the Dashboard
+ * @returns Returns JSX that displays the filters tabs.
+ */
 function AllProjectsFilters() {
 	const { sortBy, dispatch } = useContext(FiltersContext);
 
+	//---------------------------------------------------------------------------------------------------//
+	/**
+	 * Handles user clicking a filter option.
+	 * Expects the name of the filter that will be dispatched (props).
+	 * Either "projectName", "createdDate", "createdBy", "editedBy", or "editedDate"
+	 * @param {string} props
+	 * @returns Returns JSX to display the filters
+	 */
 	const handleSortClick = props => {
 		switch (props) {
 			case 'projectName':
@@ -22,6 +34,7 @@ function AllProjectsFilters() {
 		}
 	};
 
+	//---------------------------------------------------------------------------------------------------//
 	return (
 		<div className="mt-3 grid grid-cols-1 lg:grid-cols-6 bg-base-200 rounded-lg mb-3">
 			<div

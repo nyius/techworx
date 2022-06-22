@@ -44,11 +44,13 @@ function ProjectFields({ field, page, project, projectIndex, handleAddField, pro
 	 * handle adding a new ammount field.
 	 */
 	const handeNewAmount = () => {
-		numValues.push('');
-		dispatch({
-			type: 'ADD_VALUE',
-			payload: { projectName, page, field, numValues, projectIndex },
-		});
+		if (numValues[numValues.length - 1] !== '') {
+			numValues.push('');
+			dispatch({
+				type: 'ADD_VALUE',
+				payload: { projectName, page, field, numValues, projectIndex },
+			});
+		}
 	};
 
 	// ----------------------------------------------------------------------------//
@@ -128,7 +130,7 @@ function ProjectFields({ field, page, project, projectIndex, handleAddField, pro
 					</span>
 					<input
 						type="text"
-						className="input w-full w-full bg-base-100 input-sm"
+						className="input w-full w-full bg-base-100 input-sm placeholder:italic placeholder:text-slate-600"
 						placeholder="eg. New Trench/Bore"
 						defaultValue={fieldName}
 						onChange={handleEditFieldName}
@@ -165,7 +167,7 @@ function ProjectFields({ field, page, project, projectIndex, handleAddField, pro
 					data-bs-placement="top"
 					title="Add a new amount"
 				>
-					<FaPlus className="" />
+					<FaPlus />
 				</button>
 			</div>
 

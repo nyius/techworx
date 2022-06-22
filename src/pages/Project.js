@@ -152,6 +152,8 @@ function Project() {
 		});
 
 		UpdateProject(project, dispatch, projectIndex);
+
+		setPageTab(pages.length);
 	};
 
 	// ---------------------------------------------------------------------------------------------------//

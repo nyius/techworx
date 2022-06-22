@@ -119,12 +119,12 @@ function ProjectFields({ field, page, project, projectIndex, handleAddField, pro
 
 	//---------------------------------------------------------------------------------------------------//
 	return (
-		<div className="mt-4 flex flex-col xl:grid xl:grid-cols-12 gap-6 basis-4/6">
+		<div className="mt-4 w-1000 flex flex-col xl:grid xl:grid-cols-12 gap-6 basis-4/6">
 			{/* Field Name */}
 			<div className="col-span-5 lg:col-span-7">
 				<label htmlFor="" className="input-group ">
-					<span className="bg-neutral-focus">
-						<FaGripVertical className="h-3 w-3 fill-base-100" />
+					<span className="bg-neutral-focus cursor-pointer">
+						<FaGripVertical className="h-3 w-3 fill-base-100 " />
 					</span>
 					<input
 						type="text"

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useCallback } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import ProjectsContext from '../context/projects/ProjectContext';
 import AlertContext from '../context/alert/AlertContext';
@@ -7,9 +7,9 @@ import ProjectFields from '../components/projects/ProjectFields';
 import { removeProjectAndNavigate, UpdateProject } from '../context/projects/ProjectsActions';
 import _ from 'lodash';
 import Spinner from '../components/assets/Spinner';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 // TODO:
-// Fix 2 things with same uid when making a new project on the dashboard??
 // Make 'accoutn setup' page private
 // Collapse values?
 // drag and drop fields
@@ -58,6 +58,31 @@ function Project() {
 		window.addEventListener('unload', unloadSetOpen);
 		return () => window.removeEventListener('unload', unloadSetOpen);
 	});
+
+	//---------------------------------------------------------------------------------------------------//
+	/**
+	 * Handles reordering the fields when dragging
+	 */
+	const onDragEnd = result => {
+		if (!result.destination) {
+			return;
+		}
+
+		if (result.destination.index === result.source.index) {
+			return;
+		}
+
+		const page = result.source.droppableId;
+		const moved = result.source.index;
+		const movedTo = result.destination.index;
+
+		dispatch({
+			type: 'REORDER_PAGES',
+			payload: { projectIndex, page, moved, movedTo },
+		});
+
+		UpdateProject(project, dispatch, projectIndex);
+	};
 
 	//---------------------------------------------------------------------------------------------------//
 	/**
@@ -307,37 +332,50 @@ function Project() {
 						{/* Make a curPageFields div for each page */}
 						{pages.map((page, i) => {
 							return (
-								<div key={i} className={`h-full basis-7/12 ${i + 1 === pageTab ? '' : 'hidden'}`}>
-									{/* curPageFields list */}
-									{page.map((field, j) => {
-										if (typeof field !== 'undefined') {
-											return (
-												<ProjectFields
-													key={j}
-													project={project}
-													page={i}
-													field={j}
-													itemNum={field[0]}
-													projectIndex={projectIndex}
-													projectName={projectName}
-													handleAddField={handleAddField}
-												/>
-											);
-										}
-									})}
+								<DragDropContext onDragEnd={onDragEnd} key={i}>
+									<Droppable droppableId={i + ''}>
+										{(provided, snapshot) => (
+											<div
+												key={i}
+												ref={provided.innerRef}
+												style={{
+													backgroundColor: snapshot.isDraggingOver ? '#242933' : '',
+												}}
+												className={`h-full basis-7/12 ${i + 1 === pageTab ? '' : 'hidden'}`}
+												{...provided.droppableProps}
+											>
+												{/* curPageFields list */}
+												{page.map((field, j) => {
+													if (typeof field !== 'undefined') {
+														return (
+															<Draggable draggableId={j + ''} index={j} key={j}>
+																{provided => (
+																	<div
+																		ref={provided.innerRef}
+																		{...provided.draggableProps}
+																		{...provided.dragHandleProps}
+																	>
+																		<ProjectFields
+																			project={project}
+																			page={i}
+																			field={j}
+																			itemNum={field[0]}
+																			projectIndex={projectIndex}
+																			projectName={projectName}
+																			handleAddField={handleAddField}
+																		/>
+																	</div>
+																)}
+															</Draggable>
+														);
+													}
+												})}
 
-									{/* -------------------------------Add new field button -------------------------------*/}
-									<p className="text-center xl:hidden">Add new field</p>
-									<button
-										className="btn btn-block btn-sm border-none text-accent flex hover:text-base-200 justify-center items-center bg-base-200 hover:bg-success  rounded-lg shadow-xl mt-3"
-										onClick={handleAddField}
-										data-bs-toggle="tooltip"
-										data-bs-placement="top"
-										title="Add a new field"
-									>
-										<FaPlus className="" />
-									</button>
-								</div>
+												{provided.placeholder}
+											</div>
+										)}
+									</Droppable>
+								</DragDropContext>
 							);
 						})}
 
@@ -375,6 +413,17 @@ function Project() {
 							</div>
 						</div>
 					</div>
+					{/* -------------------------------Add new field button -------------------------------*/}
+					<p className="text-center xl:hidden">Add new field</p>
+					<button
+						className="btn btn-block btn-sm border-none text-accent flex hover:text-base-200 justify-center items-center bg-base-200 hover:bg-success  rounded-lg shadow-xl mt-3"
+						onClick={handleAddField}
+						data-bs-toggle="tooltip"
+						data-bs-placement="top"
+						title="Add a new field"
+					>
+						<FaPlus className="" />
+					</button>
 				</div>
 
 				{/* ----------------------------------- Delete Page Modal----------------------------------- */}

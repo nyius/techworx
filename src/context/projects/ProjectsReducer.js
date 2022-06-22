@@ -103,6 +103,15 @@ const ProjectsReducer = (state, action) => {
 			});
 
 			return setMeterCheckedState;
+		case 'REORDER_PAGES':
+			const setReorderState = { ...state };
+
+			setReorderState.projects[action.payload.projectIndex].pages.forEach(page => {
+				const [removed] = page.splice(action.payload.moved, 1);
+				page.splice(action.payload.movedTo, 0, removed);
+			});
+
+			return setReorderState;
 		default:
 			return state;
 	}
